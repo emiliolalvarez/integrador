@@ -12,3 +12,4 @@
 #### Herramientas:
 - https://www.draw.io/ (para dibujar los diagramas UML)
 - https://github.com/emiliolalvarez/integrador (repositorio público git)
+- http://inchoo.net/dev-talk/how-to-generate-ssh-keys-for-git-authorization/ (Instalar git-console para windows y generar ssh keys) 
