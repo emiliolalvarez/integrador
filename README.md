@@ -1,14 +1,14 @@
-#Trabajo práctico integrador
+# Trabajo práctico integrador
 
-##Programación orientada a objetos II
+## Programación orientada a objetos II
 
-###Integrantes:
+### Integrantes:
 
 - Guillermo Salvatore guillesalvatore@gmail.com
 - Emilio Alvarez emiliolalvarez@gmail.com
 - Germán Cabrera gmcabrera121190@gmail.com
 
 
-####Herramientas:
+#### Herramientas:
 - https://www.draw.io/ (para dibujar los diagramas UML)
 - https://github.com/emiliolalvarez/integrador (repositorio público git)
