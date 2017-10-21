@@ -1,2 +1,5 @@
 .idea
 integrador.iml
+/out
+/out/*
+out/*
