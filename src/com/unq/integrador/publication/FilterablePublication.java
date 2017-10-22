@@ -20,10 +20,14 @@ public class FilterablePublication implements Filterable {
     public FilterValue getFilterValue(String property) {
         if (property.equals("country")) {
             return new FilterStringValue(this.publication.getCountry());
-        } else if(property.equals("city")) {
-            return new FilterStringValue(this.publication.getCity());
         } else if(property.equals("surface")) {
             return new FilterIntegerValue(this.publication.getSurface());
+        } else if(property.equals("city")) {
+            return new FilterStringValue(this.publication.getCity());
+        } else if(property.equals("address")) {
+            return new FilterStringValue(this.publication.getAddress());
+        } else if(property.equals("type")) {
+            return new FilterStringValue(this.publication.getType());
         } else if(property.equals("capacity")) {
             return new FilterIntegerValue(this.publication.getCapacity());
         } else {

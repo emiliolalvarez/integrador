@@ -6,17 +6,17 @@ public class FilterStringValue extends FilterValue {
         super(value);
     }
 
-    public String value() {
-        return (String) super.value();
+    public String getValue() {
+        return (String) super.getValue();
     }
 
     @Override
-    public Boolean isGreaterThan(FilterValue value) {
-        return ((String)value.value()).compareTo(value()) == 1;
+    public Boolean isGreaterThan(FilterValue filterValue) {
+        return getValue().compareTo(((String) filterValue.getValue())) == 1;
     }
 
     @Override
-    public Boolean isLessThan(FilterValue value) {
-        return ((String)value.value()).compareTo(value()) == -1;
+    public Boolean isLessThan(FilterValue filterValue) {
+        return getValue().compareTo(((String) filterValue.getValue())) == -1;
     }
 }

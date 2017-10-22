@@ -3,7 +3,9 @@ package com.unq.integrador;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.publication.PublicationService;
 import com.unq.integrador.search.filter.Equals;
+import com.unq.integrador.search.filter.GreaterThan;
 import com.unq.integrador.search.filter.GroupFilter;
+import com.unq.integrador.search.filter.LessThan;
 import com.unq.integrador.search.filter.operator.AndOperator;
 import com.unq.integrador.search.filter.operator.OrOperator;
 import com.unq.integrador.search.filter.value.FilterIntegerValue;
@@ -18,32 +20,53 @@ public class Main {
 
         Set<Publication> publications = new HashSet<>();
 
+        //Crear publicaciones
         Publication publication1 = new Publication();
         publication1.setCountry("Argentina");
-        publication1.setCity("Ciudad Autónoma de Buenos Aires");
-        publication1.setCapacity(10);
+        publication1.setCity("CABA");
+        publication1.setCapacity(6);
+        publication1.setType("ph");
+        publication1.setAddress("Moldes 1435");
         Publication publication2 = new Publication();
         publication2.setCountry("Argentina");
-        publication2.setCity("Quilmes");
-        //publication2.setCapacity(4);
+        publication2.setCity("Bernal");
+        publication2.setCapacity(4);
+        publication2.setType("apartment");
+        publication2.setAddress("Cramer 764");
+        Publication publication3 = new Publication();
+        publication3.setCountry("Argentina");
+        publication3.setCity("Bernal");
+        publication3.setCapacity(3);
+        publication3.setType("apartment");
+        publication3.setAddress("Pringles 264");
 
+        //Agregar las publicaciones a la colección
         publications.add(publication1);
         publications.add(publication2);
+        publications.add(publication3);
 
+
+        //Crear una instancia de PublicationServices con la lista de publicaciones
         PublicationService service = new PublicationService(publications);
 
-        GroupFilter groupFilter = new GroupFilter();
-        groupFilter.addFilter(new Equals("country", new FilterStringValue("Argentina")), new AndOperator())
-                .addFilter(new Equals("country", new FilterStringValue("Brasil")), new OrOperator())
-                .addFilter(new Equals("capacity", new FilterIntegerValue(10)), new AndOperator());
+        //Configuramos un filtro de búsqueda
+        //En este ejemplo bsuscamos: departamentos en Bernal de entre 4 y 6 personas de capacidad
+        GroupFilter filter = new GroupFilter();
+        filter.addFilter(new Equals("city", new FilterStringValue("Bernal")), new OrOperator());
 
-        GroupFilter groupFilter2 = new GroupFilter();
-        groupFilter2.addFilter(new Equals("capacity", new FilterIntegerValue(11)), new AndOperator())
-                .addFilter(groupFilter2, new OrOperator());
+        GroupFilter capacityFilter = new GroupFilter();
+        capacityFilter.addFilter(new GreaterThan("capacity", new FilterIntegerValue(3)), new AndOperator())
+                .addFilter(new LessThan("capacity", new FilterIntegerValue(7)), new AndOperator());
 
-        System.out.println(groupFilter.getConditionString());
+        filter.addFilter(capacityFilter, new AndOperator());
 
-        Set<Publication> results = service.search(groupFilter);
-        results.forEach((publication -> System.out.println(publication)));
+
+        //Ejecutamos la búsquda
+        Set<Publication> results = service.search(filter);
+
+        //Mostramos el query string generado por el filtro de búsquda
+        System.out.println(filter.getConditionString());
+        //Mostramos los resultados
+        results.forEach((publication -> System.out.println(publication.getType() + " en " + publication.getCountry() + ", " + publication.getCity() + ": " + publication.getAddress())));
     }
 }

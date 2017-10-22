@@ -15,6 +15,6 @@ public class Contains extends SimpleFilter {
 
     @Override
     public boolean test(Filterable element) {
-        return element.getFilterValue(this.getName()).toString().contains(this.getFilterValue().value().toString());
+        return element.getFilterValue(this.getName()).toString().contains(this.getFilterValue().getValue().toString());
     }
 }

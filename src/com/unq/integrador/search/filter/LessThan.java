@@ -9,7 +9,7 @@ public class LessThan extends SimpleFilter {
 
     @Override
     protected String getConditionString() {
-        return this.getName() + " < " + this.getFilterValue();
+        return this.getName() + " < " + this.getFilterValue().getValue();
     }
 
     @Override

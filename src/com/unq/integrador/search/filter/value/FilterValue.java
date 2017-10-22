@@ -8,15 +8,15 @@ abstract public class FilterValue<V>{
         this.value = value;
     }
 
-    public V value() {
+    public V getValue() {
         return value;
     }
 
-    abstract public Boolean isGreaterThan(FilterValue value);
-    abstract public Boolean isLessThan(FilterValue value);
+    abstract public Boolean isGreaterThan(FilterValue filterValue);
+    abstract public Boolean isLessThan(FilterValue filterValue);
 
-    public Boolean isEqualTo(FilterValue value) {
-        return this.value.equals(value.value());
+    public Boolean isEqualTo(FilterValue filterValue) {
+        return this.value.equals(filterValue.getValue());
     }
 
 }

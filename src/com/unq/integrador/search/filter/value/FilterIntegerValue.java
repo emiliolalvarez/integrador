@@ -6,18 +6,18 @@ public class FilterIntegerValue extends FilterValue {
         super(value);
     }
 
-    public Integer value() {
-        return (Integer) super.value();
+    public Integer getValue() {
+        return (Integer) super.getValue();
     }
 
     @Override
-    public Boolean isGreaterThan(FilterValue value) {
-        return ((Integer)value.value()).compareTo(value()) == 1;
+    public Boolean isGreaterThan(FilterValue filterValue) {
+        return getValue().compareTo(((Integer) filterValue.getValue())) == 1;
     }
 
     @Override
-    public Boolean isLessThan(FilterValue value) {
-        return ((Integer)value.value()).compareTo(value()) == -1;
+    public Boolean isLessThan(FilterValue filterValue) {
+        return getValue().compareTo(((Integer) filterValue.getValue())) == -1;
     }
 
 }

@@ -113,6 +113,4 @@ public class Publication {
     public void setPricePeriods(Set<PricePeriod> pricePeriods) {
         this.pricePeriods = pricePeriods;
     }
-
-
 }

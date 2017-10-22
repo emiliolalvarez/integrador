@@ -10,12 +10,12 @@ public class Equals extends SimpleFilter {
 
     @Override
     protected String getConditionString() {
-        return this.getName() + " = \"" + this.getFilterValue().value() + "\"";
+        return this.getName() + " = \"" + this.getFilterValue().getValue() + "\"";
     }
 
     @Override
     public boolean test(Filterable element) {
-        if (element.getFilterValue(this.getName()).value() == null) {
+        if (element.getFilterValue(this.getName()).getValue() == null) {
             return false;
         }
         return element.getFilterValue(this.getName()).isEqualTo(this.getFilterValue());
