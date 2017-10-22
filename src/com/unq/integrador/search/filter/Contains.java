@@ -4,8 +4,8 @@ import com.unq.integrador.search.filter.value.FilterValue;
 
 public class Contains extends SimpleFilter {
 
-    public Contains(String name, FilterValue value) {
-        super(name, value);
+    public Contains(String name, FilterValue filterValue) {
+        super(name, filterValue);
     }
 
     @Override

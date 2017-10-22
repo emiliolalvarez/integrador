@@ -3,8 +3,8 @@ package com.unq.integrador.search.filter;
 import com.unq.integrador.search.filter.value.FilterValue;
 
 public class LessThan extends SimpleFilter {
-    public LessThan(String name, FilterValue value) {
-        super(name, value);
+    public LessThan(String name, FilterValue filterValue) {
+        super(name, filterValue);
     }
 
     @Override

@@ -4,8 +4,8 @@ import com.unq.integrador.search.filter.value.FilterValue;
 
 public class GreaterThan extends SimpleFilter {
 
-    public GreaterThan(String name, FilterValue value) {
-        super(name, value);
+    public GreaterThan(String name, FilterValue filterValue) {
+        super(name, filterValue);
     }
 
     @Override
