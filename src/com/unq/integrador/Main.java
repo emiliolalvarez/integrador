@@ -8,6 +8,7 @@ import com.unq.integrador.search.filter.GreaterThan;
 import com.unq.integrador.search.filter.GroupFilter;
 import com.unq.integrador.search.filter.LessThan;
 import com.unq.integrador.search.filter.operator.AndOperator;
+import com.unq.integrador.search.filter.operator.Operator;
 import com.unq.integrador.search.filter.operator.OrOperator;
 import com.unq.integrador.search.filter.value.FilterValue;
 
@@ -56,13 +57,13 @@ public class Main {
         //Configuramos un filtro de búsqueda
         //En este ejemplo bsuscamos: departamentos en Bernal de entre 4 y 6 personas de capacidad
         GroupFilter filter = new GroupFilter();
-        filter.addFilter(new Equals("city", new FilterValue("Bernal")), new OrOperator());
+        filter.addFilter(new Equals("city", new FilterValue("Bernal")), Operator.or());
 
         GroupFilter capacityFilter = new GroupFilter();
-        capacityFilter.addFilter(new GreaterThan("capacity", new FilterValue(3)), new AndOperator())
-                .addFilter(new LessThan("capacity", new FilterValue(7)), new AndOperator());
+        capacityFilter.addFilter(new GreaterThan("capacity", new FilterValue(3)), Operator.and())
+                .addFilter(new LessThan("capacity", new FilterValue(7)), Operator.and());
 
-        filter.addFilter(capacityFilter, new AndOperator());
+        filter.addFilter(capacityFilter, Operator.and());
 
 
         //Ejecutamos la búsquda
