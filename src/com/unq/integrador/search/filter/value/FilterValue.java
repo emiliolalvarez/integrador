@@ -1,19 +1,24 @@
 package com.unq.integrador.search.filter.value;
 
-abstract public class FilterValue<V>{
+public class FilterValue {
 
-    private V value;
+    private Comparable value;
 
-    public FilterValue(V value) {
+    public FilterValue(Comparable value) {
         this.value = value;
     }
 
-    public V getValue() {
+    public Comparable getValue() {
         return value;
     }
 
-    abstract public Boolean isGreaterThan(FilterValue filterValue);
-    abstract public Boolean isLessThan(FilterValue filterValue);
+    public Boolean isLessThan(FilterValue filterValue) {
+        return getValue().compareTo((filterValue.getValue())) == -1;
+    }
+
+    public Boolean isGreaterThan(FilterValue filterValue) {
+        return getValue().compareTo((filterValue.getValue())) == 1;
+    }
 
     public Boolean isEqualTo(FilterValue filterValue) {
         return this.value.equals(filterValue.getValue());
