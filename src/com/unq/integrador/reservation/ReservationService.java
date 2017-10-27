@@ -2,6 +2,7 @@ package com.unq.integrador.reservation;
 
 import com.unq.integrador.User;
 import com.unq.integrador.publication.Publication;
+import com.unq.integrador.publication.PublicationStatus;
 import com.unq.integrador.score.OccupantScore;
 import com.unq.integrador.score.OwnerScore;
 import com.unq.integrador.score.PropertyScore;
@@ -41,4 +42,16 @@ public class ReservationService {
         reservation.setPropertyScore(score);
     }
 
+
+    public PublicationStatus getPublicationStatusForDaterRange(Publication publication, LocalDate startDate, LocalDate endDate) {
+        Long count = getAll().stream()
+                .filter(reservation -> reservation.getPublication().equals(publication))
+                .filter(reservation ->
+                        (startDate.isAfter(reservation.getStartDate()) && startDate.isBefore(reservation.getEndDate()))
+                                || (endDate.isAfter(reservation.getStartDate()) && endDate.isBefore(reservation.getEndDate()))
+                                || ((endDate.isEqual(reservation.getStartDate()) || endDate.isEqual(reservation.getEndDate())))
+                                || ((startDate.isEqual(reservation.getStartDate()) || startDate.isEqual(reservation.getEndDate())))
+                ).count();
+        return count == 0 ? PublicationStatus.AVAILABLE : PublicationStatus.RESERVED;
+    }
 }

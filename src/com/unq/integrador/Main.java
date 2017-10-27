@@ -3,6 +3,8 @@ package com.unq.integrador;
 import com.unq.integrador.publication.PropertyType;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.publication.PublicationService;
+import com.unq.integrador.publication.PublicationStatus;
+import com.unq.integrador.reservation.ReservationService;
 import com.unq.integrador.search.Equals;
 import com.unq.integrador.search.GreaterThan;
 import com.unq.integrador.search.GroupFilter;
@@ -17,6 +19,7 @@ public class Main {
 
     public static void main(String [] args) {
 
+        ReservationService reservationService = new ReservationService();
         Set<Publication> publications = new HashSet<>();
         User user = new User("John", "Doe", "john.doe@example.com", "+54 11 1234 5678");
 
@@ -49,7 +52,7 @@ public class Main {
 
 
         //Crear una instancia de PublicationServices con la lista de publicaciones
-        PublicationService service = new PublicationService(publications);
+        PublicationService service = new PublicationService(publications, reservationService);
 
         //Configuramos un filtro de búsqueda
         //En este ejemplo bsuscamos: departamentos en Bernal de entre 4 y 6 personas de capacidad
@@ -61,7 +64,7 @@ public class Main {
                 .addFilter(new LessThan("capacity", new FilterValue(7)), Operator.and());
 
         filter.addFilter(capacityFilter, Operator.and());
-
+        filter.addFilter(new Equals("status", new FilterValue(PublicationStatus.AVAILABLE.toString())), Operator.and());
 
         //Ejecutamos la búsquda
         Set<Publication> results = service.search(filter);
