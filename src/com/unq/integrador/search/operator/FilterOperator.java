@@ -1,6 +1,4 @@
-package com.unq.integrador.search.filter.operator;
-
-import com.unq.integrador.search.filter.Filterable;
+package com.unq.integrador.search.operator;
 
 abstract public class FilterOperator {
     public abstract String getName();

@@ -1,7 +1,7 @@
 package com.unq.integrador.publication;
 
-import com.unq.integrador.search.filter.Filterable;
-import com.unq.integrador.search.filter.value.FilterValue;
+import com.unq.integrador.search.Filterable;
+import com.unq.integrador.search.value.FilterValue;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -25,7 +25,7 @@ public class FilterablePublication implements Filterable {
         } else if(property.equals("address")) {
             return new FilterValue(this.publication.getAddress());
         } else if(property.equals("type")) {
-            return new FilterValue(this.publication.getType());
+            return new FilterValue(this.publication.getType().getName());
         } else if(property.equals("capacity")) {
             return new FilterValue(this.publication.getCapacity());
         } else {

@@ -1,6 +1,6 @@
-package com.unq.integrador.search.filter;
+package com.unq.integrador.search;
 
-import com.unq.integrador.search.filter.value.FilterValue;
+import com.unq.integrador.search.value.FilterValue;
 
 public abstract class SimpleFilter extends Filter {
 

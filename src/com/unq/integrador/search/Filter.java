@@ -1,7 +1,7 @@
-package com.unq.integrador.search.filter;
+package com.unq.integrador.search;
 
 
-import com.unq.integrador.search.filter.operator.FilterOperator;
+import com.unq.integrador.search.operator.FilterOperator;
 
 abstract public class Filter {
 

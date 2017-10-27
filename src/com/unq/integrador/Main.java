@@ -1,20 +1,16 @@
 package com.unq.integrador;
 
+import com.unq.integrador.publication.PropertyType;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.publication.PublicationService;
-import com.unq.integrador.publication.Service;
-import com.unq.integrador.search.filter.Equals;
-import com.unq.integrador.search.filter.GreaterThan;
-import com.unq.integrador.search.filter.GroupFilter;
-import com.unq.integrador.search.filter.LessThan;
-import com.unq.integrador.search.filter.operator.AndOperator;
-import com.unq.integrador.search.filter.operator.Operator;
-import com.unq.integrador.search.filter.operator.OrOperator;
-import com.unq.integrador.search.filter.value.FilterValue;
+import com.unq.integrador.search.Equals;
+import com.unq.integrador.search.GreaterThan;
+import com.unq.integrador.search.GroupFilter;
+import com.unq.integrador.search.LessThan;
+import com.unq.integrador.search.operator.Operator;
+import com.unq.integrador.search.value.FilterValue;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Main {
@@ -22,27 +18,28 @@ public class Main {
     public static void main(String [] args) {
 
         Set<Publication> publications = new HashSet<>();
+        User user = new User("John", "Doe", "john.doe@example.com", "+54 11 1234 5678");
 
         //Crear publicaciones
-        Publication publication1 = new Publication();
+        Publication publication1 = new Publication(user);
         publication1.setCountry("Argentina");
         publication1.setCity("CABA");
         publication1.setCapacity(6);
-        publication1.setType("ph");
+        publication1.setType(new PropertyType("ph"));
         publication1.setAddress("Moldes 1435");
 
-        Publication publication2 = new Publication();
+        Publication publication2 = new Publication(user);
         publication2.setCountry("Argentina");
         publication2.setCity("Bernal");
         publication2.setCapacity(4);
-        publication2.setType("apartment");
+        publication2.setType(new PropertyType("apartment"));
         publication2.setAddress("Cramer 764");
 
-        Publication publication3 = new Publication();
+        Publication publication3 = new Publication(user);
         publication3.setCountry("Argentina");
         publication3.setCity("Bernal");
         publication3.setCapacity(4);
-        publication3.setType("apartment");
+        publication3.setType(new PropertyType("apartment"));
         publication3.setAddress("Pringles 264");
 
         //Agregar las publicaciones a la colección

@@ -1,4 +1,4 @@
-package com.unq.integrador.search.filter.value;
+package com.unq.integrador.search.value;
 
 public class FilterValue {
 

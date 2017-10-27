@@ -1,11 +1,13 @@
 package com.unq.integrador.publication;
 
+import com.unq.integrador.User;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
 public class Publication {
 
-    String type;
+    PropertyType type;
     Integer surface;
     String country;
     String city;
@@ -17,12 +19,17 @@ public class Publication {
     Set<Picture> pictures;
     Set<PaymentOption> paymentOptions;
     Set<PricePeriod> pricePeriods;
+    User owner;
 
-    public String getType() {
+    public Publication(User owner) {
+        this.owner = owner;
+    }
+
+    public PropertyType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(PropertyType type) {
         this.type = type;
     }
 
@@ -112,5 +119,13 @@ public class Publication {
 
     public void setPricePeriods(Set<PricePeriod> pricePeriods) {
         this.pricePeriods = pricePeriods;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 }

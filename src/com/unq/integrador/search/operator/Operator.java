@@ -1,4 +1,4 @@
-package com.unq.integrador.search.filter.operator;
+package com.unq.integrador.search.operator;
 
 public class Operator {
 
