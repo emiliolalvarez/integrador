@@ -1,7 +1,6 @@
 package com.unq.integrador.publication;
 
 import com.unq.integrador.User;
-import com.unq.integrador.mail.MailServer;
 import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.site.PropertyType;
 import com.unq.integrador.site.Service;
@@ -143,6 +142,7 @@ public class Publication {
 
     public void addReservation(Reservation reservation) {
         reservations.add(reservation);
+        reservation.getOccupant().addReservation(reservation);
     }
 
     public List<Reservation> getReservations() {

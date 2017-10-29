@@ -55,9 +55,15 @@ public class Main {
         publications.forEach(publication -> site.registerPublication(publication));
 
 
-        Filter filter = new AndFilter(new CityFilter("Bernal"), new AndFilter(new CountryFilter("Argentina"), new PriceLowerThanFilter(3000, LocalDate.now(), LocalDate.now().plusDays(13))));
+        Filter filter = new AndFilter(
+            new CityFilter("Bernal"),
+            new AndFilter(
+                    new CountryFilter("Argentina"),
+                    new PriceLowerThanFilter(3000, LocalDate.now(), LocalDate.now().plusDays(13))
+            )
+        );
 
-        Set<Publication> results = publications.stream().filter(publication -> filter.eval(publication)).collect(Collectors.toSet());
+        Set<Publication> results = site.search(filter);
 
         results.forEach(publication -> System.out.println(publication.getType().getName() + " => "
                 + publication.getCountry() + ", " + publication.getCity() + ", " + publication.getAddress()));
