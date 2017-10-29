@@ -3,13 +3,13 @@ package com.unq.integrador;
 import com.unq.integrador.publication.PricePeriod;
 import com.unq.integrador.site.PropertyType;
 import com.unq.integrador.publication.Publication;
+import com.unq.integrador.site.Service;
 import com.unq.integrador.site.Site;
 import com.unq.integrador.filter.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class Main {
 
@@ -38,6 +38,8 @@ public class Main {
         publication2.setType(new PropertyType("apartment"));
         publication2.setAddress("Cramer 764");
         publication2.getPricePeriods().add(pricePeriod);
+        publication2.getServices().add(new Service("conditioned air"));
+
 
         Publication publication3 = new Publication(user);
         publication3.setCountry("Argentina");
@@ -59,7 +61,11 @@ public class Main {
             new CityFilter("Bernal"),
             new AndFilter(
                     new CountryFilter("Argentina"),
-                    new PriceLowerThanFilter(3000, LocalDate.now(), LocalDate.now().plusDays(13))
+                    new AndFilter(
+                            new PriceLowerThanFilter(3000, LocalDate.now(), LocalDate.now().plusDays(13)),
+                            new HasServiceFilter(new Service("conditioned air"))
+                    )
+
             )
         );
 
