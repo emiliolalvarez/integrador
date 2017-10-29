@@ -98,7 +98,7 @@ public class Site {
 
     public Set<Publication> getPublications() {
         Set<Publication> publications = new HashSet<>();
-        users.stream().forEach(user -> publications.addAll(user.getPublications()));
+        users.forEach(user -> publications.addAll(user.getPublications()));
         return publications;
     }
 

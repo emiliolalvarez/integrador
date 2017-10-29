@@ -16,13 +16,16 @@ public class Main {
     public static void main(String [] args) {
 
         Site site = new Site();
-
-        Set<Publication> publications = new HashSet<>();
         User user = new User("John", "Doe", "john.doe@example.com", "+54 11 1234 5678");
+        //Registrar el usuario en el sitio
+        site.registerUser(user);
 
+        //Crear período de precio
         PricePeriod pricePeriod = new PricePeriod(1, 1, 12, 30, 120);
 
         //Crear publicaciones
+        Set<Publication> publications = new HashSet<>();
+
         Publication publication1 = new Publication(user);
         publication1.setCountry("Argentina");
         publication1.setCity("CABA");
@@ -54,23 +57,26 @@ public class Main {
         publications.add(publication2);
         publications.add(publication3);
 
-        publications.forEach(publication -> site.registerPublication(publication));
+        //Asociar las publicaciones al usuario
+        publications.forEach(publication -> user.addPublication(publication));
 
 
+        //Creamos filtro: city = "Bernal" AND country="Argentina" AND price < 3000 AND hasService('conditioned air')
         Filter filter = new AndFilter(
             new CityFilter("Bernal"),
             new AndFilter(
-                    new CountryFilter("Argentina"),
-                    new AndFilter(
-                            new PriceLowerThanFilter(3000, LocalDate.now(), LocalDate.now().plusDays(13)),
-                            new HasServiceFilter(new Service("conditioned air"))
-                    )
-
+                new CountryFilter("Argentina"),
+                new AndFilter(
+                        new PriceLowerThanFilter(3000, LocalDate.now(), LocalDate.now().plusDays(13)),
+                        new HasServiceFilter(new Service("conditioned air"))
+                )
             )
         );
 
+        //Buscamos publicaciones a través del sitio paasándole un filtro de búsqueda
         Set<Publication> results = site.search(filter);
 
+        //Iteramos los resultados y los imprimimos por consola
         results.forEach(publication -> System.out.println(publication.getType().getName() + " => "
                 + publication.getCountry() + ", " + publication.getCity() + ", " + publication.getAddress()));
    }
