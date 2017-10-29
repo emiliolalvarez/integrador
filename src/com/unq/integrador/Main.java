@@ -29,7 +29,7 @@ public class Main {
         publication1.setCapacity(6);
         publication1.setType(new PropertyType("ph"));
         publication1.setAddress("Moldes 1435");
-        publication1.getPricePeriods().add(pricePeriod);
+        publication1.addPricePeriod(pricePeriod);
 
         Publication publication2 = new Publication(user);
         publication2.setCountry("Argentina");
@@ -37,8 +37,8 @@ public class Main {
         publication2.setCapacity(4);
         publication2.setType(new PropertyType("apartment"));
         publication2.setAddress("Cramer 764");
-        publication2.getPricePeriods().add(pricePeriod);
-        publication2.getServices().add(new Service("conditioned air"));
+        publication2.addPricePeriod(pricePeriod);
+        publication2.addService(new Service("conditioned air"));
 
 
         Publication publication3 = new Publication(user);
@@ -47,7 +47,7 @@ public class Main {
         publication3.setCapacity(4);
         publication3.setType(new PropertyType("apartment"));
         publication3.setAddress("Pringles 264");
-        publication3.getPricePeriods().add(pricePeriod);
+        publication3.addPricePeriod(pricePeriod);
 
         //Agregar las publicaciones a la colección
         publications.add(publication1);

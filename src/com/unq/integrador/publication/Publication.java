@@ -106,12 +106,28 @@ public class Publication {
         this.services = services;
     }
 
+    public void addService(Service service) {
+        services.add(service);
+    }
+
+    public void removeService(Service service) {
+        services.remove(service);
+    }
+
     public Set<Picture> getPictures() {
         return pictures;
     }
 
     public void setPictures(Set<Picture> pictures) {
         this.pictures = pictures;
+    }
+
+    public void addPicture(Picture picture) {
+        pictures.add(picture);
+    }
+
+    public void removePicture(Picture picture) {
+        pictures.remove(picture);
     }
 
     public Set<PaymentOption> getPaymentOptions() {
@@ -122,12 +138,28 @@ public class Publication {
         this.paymentOptions = paymentOptions;
     }
 
+    public void addPaymentOption(PaymentOption paymentOption) {
+        this.paymentOptions.add(paymentOption);
+    }
+
+    public void removePaymentOption(PaymentOption paymentOption) {
+        paymentOptions.remove(paymentOption);
+    }
+
     public Set<PricePeriod> getPricePeriods() {
         return pricePeriods;
     }
 
     public void setPricePeriods(Set<PricePeriod> pricePeriods) {
         this.pricePeriods = pricePeriods;
+    }
+
+    public void addPricePeriod(PricePeriod pricePeriod) {
+        pricePeriods.add(pricePeriod);
+    }
+
+    public void removePicePeriod(PricePeriod pricePeriod) {
+        pricePeriods.remove(pricePeriod);
     }
 
     public User getOwner() {

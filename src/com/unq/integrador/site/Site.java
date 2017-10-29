@@ -16,7 +16,6 @@ public class Site {
 
     private Set<PropertyType> propertyTypes;
     private Set<Service>  services;
-    private Set<Publication> publications;
     private Set<PropertyScoreCategory> propertyScoreCategories;
     private Set<OwnerScoreCategory> ownerScoreCategories;
     private Set<OccupantScoreCategory> occupantScoreCategories;
@@ -25,7 +24,6 @@ public class Site {
     public Site() {
         propertyTypes = new HashSet<>();
         services = new HashSet<>();
-        publications = new HashSet<>();
         propertyScoreCategories = new HashSet<>();
         ownerScoreCategories = new HashSet<>();
         occupantScoreCategories = new HashSet<>();
@@ -95,17 +93,17 @@ public class Site {
     }
 
     public Set<Publication> search(Filter filter) {
-        return publications.stream().filter(publication -> filter.eval(publication)).collect(Collectors.toSet());
+        return getPublications().stream().filter(publication -> filter.eval(publication)).collect(Collectors.toSet());
     }
 
-    public void registerPublication(Publication publication) {
-        publications.add(publication);
-        publication.getOwner().addPublication(publication);
+    public Set<Publication> getPublications() {
+        Set<Publication> publications = new HashSet<>();
+        users.stream().forEach(user -> publications.addAll(user.getPublications()));
+        return publications;
     }
 
-    public void removePublication(Publication publication) {
-        publications.remove(publication);
-        publication.getOwner().removePublication(publication);
+    public Set<User> getUsers() {
+        return users;
     }
 
     public void registerUser(User user) {
