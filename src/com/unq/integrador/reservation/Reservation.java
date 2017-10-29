@@ -1,6 +1,7 @@
 package com.unq.integrador.reservation;
 
 import com.unq.integrador.User;
+import com.unq.integrador.mail.MailServer;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.score.OccupantScore;
 import com.unq.integrador.score.OwnerScore;
@@ -8,7 +9,7 @@ import com.unq.integrador.score.PropertyScore;
 
 import java.time.LocalDate;
 
-public class Reservation {
+public class Reservation implements MailServer {
 
     private Status status;
     private Publication publication;
@@ -85,5 +86,28 @@ public class Reservation {
 
     public void setPropertyScore(PropertyScore propertyScore) {
         this.propertyScore = propertyScore;
+    }
+
+    public void reject() {
+        setStatus(Status.REJECTED);
+    }
+
+    public void cancel() {
+        setStatus(Status.CANCELLED);
+    }
+
+    public void accept() {
+        setStatus(Status.ACCEPTED);
+        sendMail(getPublication().getOwner().getEmail(), "Reservation request", getOccupant().getName()
+                + " " + getOccupant().getLastName() + " has requested a reservation for the "
+                + getPublication().getType().getName() + " - " + getPublication().getCity()
+                + ", " + getPublication().getAddress());
+    }
+
+    @Override
+    public void sendMail(String destinationAddress, String subject, String body) {
+        System.out.println("Sending email to " + destinationAddress);
+        System.out.println("Subject: " + subject);
+        System.out.println("body");
     }
 }

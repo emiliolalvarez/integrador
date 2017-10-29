@@ -1,10 +1,10 @@
-package com.unq.integrador.publication;
+package com.unq.integrador.site;
 
-public class Service {
+public class PropertyType {
 
     private String name;
 
-    public Service(String name) {
+    public PropertyType(String name) {
         this.name = name;
     }
 

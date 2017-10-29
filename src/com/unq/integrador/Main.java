@@ -1,27 +1,26 @@
 package com.unq.integrador;
 
-import com.unq.integrador.publication.PropertyType;
+import com.unq.integrador.publication.PricePeriod;
+import com.unq.integrador.site.PropertyType;
 import com.unq.integrador.publication.Publication;
-import com.unq.integrador.publication.PublicationService;
-import com.unq.integrador.publication.PublicationStatus;
-import com.unq.integrador.reservation.ReservationService;
-import com.unq.integrador.search.Equals;
-import com.unq.integrador.search.GreaterThan;
-import com.unq.integrador.search.GroupFilter;
-import com.unq.integrador.search.LessThan;
-import com.unq.integrador.search.operator.Operator;
-import com.unq.integrador.search.value.FilterValue;
+import com.unq.integrador.site.Site;
+import com.unq.integrador.filter.*;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Main {
 
     public static void main(String [] args) {
 
-        ReservationService reservationService = new ReservationService();
+        Site site = new Site();
+
         Set<Publication> publications = new HashSet<>();
         User user = new User("John", "Doe", "john.doe@example.com", "+54 11 1234 5678");
+
+        PricePeriod pricePeriod = new PricePeriod(1, 1, 12, 30, 120);
 
         //Crear publicaciones
         Publication publication1 = new Publication(user);
@@ -30,6 +29,7 @@ public class Main {
         publication1.setCapacity(6);
         publication1.setType(new PropertyType("ph"));
         publication1.setAddress("Moldes 1435");
+        publication1.getPricePeriods().add(pricePeriod);
 
         Publication publication2 = new Publication(user);
         publication2.setCountry("Argentina");
@@ -37,6 +37,7 @@ public class Main {
         publication2.setCapacity(4);
         publication2.setType(new PropertyType("apartment"));
         publication2.setAddress("Cramer 764");
+        publication2.getPricePeriods().add(pricePeriod);
 
         Publication publication3 = new Publication(user);
         publication3.setCountry("Argentina");
@@ -44,35 +45,21 @@ public class Main {
         publication3.setCapacity(4);
         publication3.setType(new PropertyType("apartment"));
         publication3.setAddress("Pringles 264");
+        publication3.getPricePeriods().add(pricePeriod);
 
         //Agregar las publicaciones a la colección
         publications.add(publication1);
         publications.add(publication2);
         publications.add(publication3);
 
+        publications.forEach(publication -> site.registerPublication(publication));
 
-        //Crear una instancia de PublicationServices con la lista de publicaciones
-        PublicationService service = new PublicationService(publications, reservationService);
 
-        //Configuramos un filtro de búsqueda
-        //En este ejemplo bsuscamos: departamentos en Bernal de entre 4 y 6 personas de capacidad
-        GroupFilter filter = new GroupFilter();
-        filter.addFilter(new Equals("city", new FilterValue("Bernal")), Operator.or());
+        Filter filter = new AndFilter(new CityFilter("Bernal"), new AndFilter(new CountryFilter("Argentina"), new PriceLowerThanFilter(3000, LocalDate.now(), LocalDate.now().plusDays(13))));
 
-        GroupFilter capacityFilter = new GroupFilter();
-        capacityFilter.addFilter(new GreaterThan("capacity", new FilterValue(3)), Operator.and())
-                .addFilter(new LessThan("capacity", new FilterValue(7)), Operator.and());
+        Set<Publication> results = publications.stream().filter(publication -> filter.eval(publication)).collect(Collectors.toSet());
 
-        filter.addFilter(capacityFilter, Operator.and());
-        filter.addFilter(new Equals("status", new FilterValue(PublicationStatus.AVAILABLE.toString())), Operator.and());
-
-        //Ejecutamos la búsquda
-        Set<Publication> results = service.search(filter);
-
-        //Mostramos el query string generado por el filtro de búsquda
-        System.out.println(filter.getConditionString());
-        //Mostramos los resultados
-        results.forEach((publication -> System.out.println(publication.getType() + " en " + publication.getCountry() + ", " + publication.getCity() + ": " + publication.getAddress())));
-
-    }
+        results.forEach(publication -> System.out.println(publication.getType().getName() + " => "
+                + publication.getCountry() + ", " + publication.getCity() + ", " + publication.getAddress()));
+   }
 }

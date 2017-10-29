@@ -1,17 +1,31 @@
 package com.unq.integrador;
 
+import com.unq.integrador.publication.Publication;
+import com.unq.integrador.reservation.Reservation;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public class User {
 
     private String email;
     private String name;
     private String lastName;
     private String phone;
+    private Set<Publication> publications;
+    private List<Reservation> reservations;
 
     public User(String name, String lastName, String email, String phone) {
         this.name = name;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
+        publications = new HashSet<>();
+        reservations = new ArrayList<>();
     }
 
     public String getEmail() {
@@ -44,5 +58,39 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public void addReservation(Reservation reservation) {
+        reservations.add(reservation);
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public List<Reservation> getFutureReservations() {
+        return reservations.stream().filter(reservation -> LocalDate.now().isBefore(reservation.getStartDate()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Reservation> getCityReservations(String city) {
+       return reservations.stream().filter(reservation -> reservation.getPublication().getCity().equals(city))
+               .collect(Collectors.toList());
+    }
+
+    public Set<String> getReservationsCities() {
+       return this.getReservations().stream().map(reservation -> reservation.getPublication().getCity())
+               .collect(Collectors.toSet());
+    }
+
+    public Set<Publication> getPublications() {
+        return publications;
+    }
+
+    public void addPublication(Publication publication) {
+        publications.add(publication);
+    }
+    public void removePublication(Publication publication) {
+        publications.remove(publication);
     }
 }
