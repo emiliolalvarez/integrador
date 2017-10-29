@@ -5,11 +5,9 @@ import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.site.PropertyType;
 import com.unq.integrador.site.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Publication {
     PropertyType type;
@@ -147,6 +145,25 @@ public class Publication {
 
     public List<Reservation> getReservations() {
         return reservations;
+    }
+
+    public float getPrice(LocalDate startDate, LocalDate endDate) {
+        float amount = 0;
+        LocalDate currentDay = startDate.plusDays(0);
+        while (!currentDay.isAfter(endDate)) {
+            amount+=getDayPrice(currentDay);
+            currentDay = currentDay.plusDays(1);
+        }
+        return  amount;
+    }
+
+    private float getDayPrice(LocalDate date) {
+        Optional<PricePeriod> result = getPricePeriods().stream().filter(pricePeriod ->
+                pricePeriod.getFromMonth() <= (date.getMonthValue() +1 )
+                        && pricePeriod.getFromDay()<= date.getDayOfMonth()
+                        && (date.getMonthValue() + 1)<= pricePeriod.getEndMonth() && date.getDayOfMonth() <= pricePeriod.getEndDay()
+        ).findFirst();
+        return result.isPresent() ? result.get().getPrice() : 0;
     }
 
 }
