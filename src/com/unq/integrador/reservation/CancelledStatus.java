@@ -25,4 +25,9 @@ class CancelledStatus extends Status {
     public void finalize() {
         System.out.println("Could not finalize an already cancelled reservation");
     }
+
+    @Override
+    public void cancel() {
+        System.out.println("Reservation was already cancelled");
+    }
 }

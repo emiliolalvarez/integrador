@@ -25,4 +25,9 @@ public class RejectedStatus extends Status {
     public void finalize() {
         System.out.println("Could not finalize an already rejected reservation");
     }
+
+    @Override
+    public void cancel() {
+        System.out.println("Could not cancel an already rejected reservation");
+    }
 }

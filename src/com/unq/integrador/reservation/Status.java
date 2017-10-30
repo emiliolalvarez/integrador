@@ -12,5 +12,6 @@ public abstract class Status {
     public abstract void reject();
     public abstract void pending();
     public abstract void finalize();
+    public abstract void cancel();
 
 }

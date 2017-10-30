@@ -119,10 +119,26 @@ public class Reservation implements MailServer {
         this.propertyScore = propertyScore;
     }
 
+    public void accept() {
+        status.accept();
+    }
+
+    public void reject() {
+        status.reject();
+    }
+
+    public void cancel() {
+        status.cancel();
+    }
+
+    public void pending() {
+        status.pending();
+    }
+
     @Override
     public void sendMail(String destinationAddress, String subject, String body) {
         System.out.println("Sending email to " + destinationAddress);
         System.out.println("Subject: " + subject);
-        System.out.println("body");
+        System.out.println(body);
     }
 }

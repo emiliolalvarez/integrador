@@ -25,4 +25,9 @@ public class FinalizedStatus extends Status {
     public void finalize() {
         System.out.println("Reservation has already finalized");
     }
+
+    @Override
+    public void cancel() {
+        System.out.println("Could not cancel an already finalized reservation");
+    }
 }

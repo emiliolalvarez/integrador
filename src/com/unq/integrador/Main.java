@@ -1,6 +1,7 @@
 package com.unq.integrador;
 
 import com.unq.integrador.publication.PricePeriod;
+import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.site.PropertyType;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.site.Service;
@@ -18,8 +19,11 @@ public class Main {
 
         Site site = new Site();
         User user = new User("John", "Doe", "john.doe@example.com", "+54 11 1234 5678");
-        //Registrar el usuario en el sitio
+        User otherUser = new User("Jane", "Doe", "jane.doe@example.com", "+54 11 1234 8765");
+
+        //Registrar usuarios en el sitio
         site.registerUser(user);
+        site.registerUser(otherUser);
 
         //Crear período de precio
         PricePeriod pricePeriod = new PricePeriod(1, 1, 12, 30, 120);
@@ -61,6 +65,14 @@ public class Main {
         //Asociar las publicaciones al usuario
         publications.forEach(publication -> user.addPublication(publication));
 
+        //Crear una reserva en la publicacion1
+        Reservation reservation = new Reservation(otherUser, publication1, LocalDate.now(), LocalDate.now().plusDays(15));
+        publication1.addReservation(reservation);
+
+        //Rechazar reserva
+        reservation.reject();
+
+        System.out.println("");
 
         //Creamos filtro: city = "Bernal" AND country="Argentina" AND price < 3000 AND hasService('conditioned air')
         Filter filter = new AndFilter(
