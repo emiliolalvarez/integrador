@@ -1,6 +1,6 @@
 package com.unq.integrador.score;
 
-import com.unq.integrador.User;
+import com.unq.integrador.user.User;
 import com.unq.integrador.score.category.PropertyScoreCategory;
 
 public class PropertyScore extends Score {

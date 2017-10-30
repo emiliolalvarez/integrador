@@ -6,6 +6,7 @@ import com.unq.integrador.publication.Publication;
 import com.unq.integrador.site.Service;
 import com.unq.integrador.site.Site;
 import com.unq.integrador.filter.*;
+import com.unq.integrador.user.User;
 
 import java.time.LocalDate;
 import java.util.HashSet;

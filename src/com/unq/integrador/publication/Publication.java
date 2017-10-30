@@ -1,6 +1,6 @@
 package com.unq.integrador.publication;
 
-import com.unq.integrador.User;
+import com.unq.integrador.user.User;
 import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.site.PropertyType;
 import com.unq.integrador.site.Service;

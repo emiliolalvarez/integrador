@@ -1,6 +1,6 @@
 package com.unq.integrador.site;
 
-import com.unq.integrador.User;
+import com.unq.integrador.user.User;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.score.category.OccupantScoreCategory;
 import com.unq.integrador.score.category.OwnerScoreCategory;

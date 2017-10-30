@@ -1,6 +1,6 @@
 package com.unq.integrador.reservation;
 
-import com.unq.integrador.User;
+import com.unq.integrador.user.User;
 import com.unq.integrador.mail.MailServer;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.score.OccupantScore;
@@ -10,6 +10,12 @@ import com.unq.integrador.score.PropertyScore;
 import java.time.LocalDate;
 
 public class Reservation implements MailServer {
+
+    private AcceptedStatus acceptedStatus;
+    private CancelledStatus cancelledStatus;
+    private PendingStatus pendingStatus;
+    private RejectedStatus rejectedStatus;
+    private FinalizedStatus finalizedStatus;
 
     private Status status;
     private Publication publication;
@@ -25,15 +31,40 @@ public class Reservation implements MailServer {
         this.occupant = occupant;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.status = Status.PENDING;
+        acceptedStatus = new AcceptedStatus(this);
+        cancelledStatus = new CancelledStatus(this);
+        pendingStatus = new PendingStatus(this);
+        rejectedStatus = new RejectedStatus(this);
+        finalizedStatus = new FinalizedStatus(this);
+        status = pendingStatus;
     }
 
-    public Status getStatus() {
-        return status;
+    public AcceptedStatus getAcceptedStatus() {
+        return acceptedStatus;
+    }
+
+    public CancelledStatus getCancelledStatus() {
+        return cancelledStatus;
+    }
+
+    public PendingStatus getPendingStatus() {
+        return pendingStatus;
+    }
+
+    public RejectedStatus getRejectedStatus() {
+        return rejectedStatus;
+    }
+
+    public FinalizedStatus getFinalizedStatus() {
+        return finalizedStatus;
     }
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 
     public User getOccupant() {
@@ -86,22 +117,6 @@ public class Reservation implements MailServer {
 
     public void setPropertyScore(PropertyScore propertyScore) {
         this.propertyScore = propertyScore;
-    }
-
-    public void reject() {
-        setStatus(Status.REJECTED);
-    }
-
-    public void cancel() {
-        setStatus(Status.CANCELLED);
-    }
-
-    public void accept() {
-        setStatus(Status.ACCEPTED);
-        sendMail(getPublication().getOwner().getEmail(), "Reservation request", getOccupant().getName()
-                + " " + getOccupant().getLastName() + " has requested a reservation for the "
-                + getPublication().getType().getName() + " - " + getPublication().getCity()
-                + ", " + getPublication().getAddress());
     }
 
     @Override

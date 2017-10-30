@@ -1,4 +1,4 @@
-package com.unq.integrador;
+package com.unq.integrador.user;
 
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.reservation.Reservation;
