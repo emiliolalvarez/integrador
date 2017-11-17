@@ -18,7 +18,7 @@ public abstract class Score {
         scores = new HashMap<>();
     }
 
-    protected void addCategoryScore(ScoreCategory category, Integer score) {
+    public void addCategoryScore(ScoreCategory category, Integer score) {
         scores.put(category, score);
     }
 

@@ -38,6 +38,7 @@ public class Publication implements PublicationSubject {
         services = new HashSet<>();
         pictures = new HashSet<>();
         publishers = new ArrayList<>();
+        applications = new ArrayList<>();
     }
 
     public PropertyType getType() {
