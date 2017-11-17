@@ -51,7 +51,7 @@ public class PublicationTest {
         publication.setType(type);
         publication.modifyPrice(pricePeriod, 50f);
         verify(publisher).publish("No te pierdas esta oferta: Un inmueble "
-                + type.getName() +" a tan sólo " + 50.0 +" pesos");
+                + type.getName() +" a tan sÃ³lo " + 50.0 +" pesos");
     }
 
     @Test
