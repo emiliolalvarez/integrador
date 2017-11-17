@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Site {
+public class Site implements HomePagePublisher {
 
     private Set<PropertyType> propertyTypes;
     private Set<Service>  services;
