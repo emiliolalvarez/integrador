@@ -7,27 +7,17 @@ public class FinalizedStatus extends Status {
     }
 
     @Override
-    public void accept() {
-        System.out.println("Could not accept an already finalized reservation");
-    }
+    public void accept() {}
 
     @Override
-    public void reject() {
-        System.out.println("Could not reject an already finalized reservation");
-    }
+    public void reject() {}
 
     @Override
-    public void pending() {
-        System.out.println("Could not set as pending an already finalized reservation");
-    }
+    public void pending() {}
 
     @Override
-    public void finalize() {
-        System.out.println("Reservation has already finalized");
-    }
+    public void finalize() {}
 
     @Override
-    public void cancel() {
-        System.out.println("Could not cancel an already finalized reservation");
-    }
+    public void cancel() {}
 }
