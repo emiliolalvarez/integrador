@@ -28,8 +28,7 @@ public class AcceptedStatus extends Status {
 
     @Override
     public void cancel() {
-        System.out.println("Could not cancel an already accepted reservation");
+        reservation.setStatus(reservation.getCancelledStatus());
+        reservation.getPublication().notifyCancelledReservation();
     }
-
-
 }

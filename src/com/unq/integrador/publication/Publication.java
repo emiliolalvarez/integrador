@@ -1,5 +1,7 @@
 package com.unq.integrador.publication;
 
+import com.unq.integrador.site.HomePagePublisher;
+import com.unq.integrador.site.PopUpWindow;
 import com.unq.integrador.user.User;
 import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.site.PropertyType;
@@ -9,7 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class Publication {
+public class Publication implements PublicationSubject {
     PropertyType type;
     Integer surface;
     String country;
@@ -24,6 +26,9 @@ public class Publication {
     Set<PricePeriod> pricePeriods;
     List<Reservation> reservations;
     User owner;
+    List<HomePagePublisher> publishers;
+    List<PopUpWindow> applications;
+
 
     public Publication(User owner) {
         this.owner = owner;
@@ -32,6 +37,7 @@ public class Publication {
         paymentOptions = new HashSet<>();
         services = new HashSet<>();
         pictures = new HashSet<>();
+        publishers = new ArrayList<>();
     }
 
     public PropertyType getType() {
@@ -187,6 +193,31 @@ public class Publication {
             currentDay = currentDay.plusDays(1);
         }
         return  amount;
+    }
+
+    public void modifyPrice(PricePeriod pricePeriod, Float price) {
+        if (pricePeriod.getPrice() > price) {
+            this.notifyPriceChange(price);
+        }
+        pricePeriod.setPrice(price);
+    }
+
+    public void notifyPriceChange(Float price) {
+        this.publishers.forEach(publisher -> publisher.publish("No te pierdas esta oferta: Un inmueble "
+                + this.getType().getName() +" a tan sólo " + price +" pesos"));
+    }
+
+    public void notifyCancelledReservation() {
+        this.applications.forEach(application -> application.popUp("El/la " + this.getType().getName()
+                + " que te interesa se ha liberado! Corre a reservarlo!", "green", 14));
+    }
+
+    public void registerPriceObserver(HomePagePublisher publisher) {
+        this.publishers.add(publisher);
+    }
+
+    public void registerReservationCancelledObserver(PopUpWindow application) {
+        this.applications.add(application);
     }
 
     private float getDayPrice(LocalDate date) {

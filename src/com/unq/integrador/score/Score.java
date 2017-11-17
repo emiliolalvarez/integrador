@@ -5,6 +5,8 @@ import com.unq.integrador.score.category.ScoreCategory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class Score {
 
@@ -16,7 +18,7 @@ public abstract class Score {
         scores = new HashMap<>();
     }
 
-    public void addCategoryScore(ScoreCategory category, Integer score) {
+    protected void addCategoryScore(ScoreCategory category, Integer score) {
         scores.put(category, score);
     }
 
@@ -27,4 +29,5 @@ public abstract class Score {
     public float getAverage() {
         return scores.entrySet().stream().mapToInt(entry -> entry.getValue()).sum() / scores.size();
     }
-}
+
+ }

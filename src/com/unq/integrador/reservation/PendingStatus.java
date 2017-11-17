@@ -38,5 +38,6 @@ public class PendingStatus extends Status {
     @Override
     public void cancel() {
         reservation.setStatus(reservation.getCancelledStatus());
+        reservation.getPublication().notifyCancelledReservation();
     }
 }

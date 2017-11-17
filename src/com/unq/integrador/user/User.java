@@ -2,12 +2,13 @@ package com.unq.integrador.user;
 
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.reservation.Reservation;
+import com.unq.integrador.score.OccupantScore;
+import com.unq.integrador.score.OwnerScore;
+import com.unq.integrador.score.Score;
+import com.unq.integrador.score.category.ScoreCategory;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class User {
@@ -93,4 +94,38 @@ public class User {
     public void removePublication(Publication publication) {
         publications.remove(publication);
     }
+
+    public Score getScoreAsOwner() {
+        Map<ScoreCategory, Integer> partials = new HashMap<>();
+        publications.forEach(publication -> {
+            publication.getReservations().forEach(reservation -> {
+                addToPartialScores(partials, reservation.getOwnerScore());
+            });
+        });
+        return calculateScoreAveragePerCategory(partials, new OwnerScore(this));
+    }
+
+    public Score getScoreAsOccupant() {
+        Map<ScoreCategory, Integer> partials = new HashMap<>();
+        reservations.forEach(reservation -> {
+            addToPartialScores(partials, reservation.getOccupantScore());
+        });
+        return calculateScoreAveragePerCategory(partials, new OccupantScore(this));
+    }
+
+    private void addToPartialScores(Map<ScoreCategory, Integer> partials, Score score) {
+        score.getScores().entrySet().stream().forEach(entry -> {
+            ScoreCategory category = entry.getKey();
+            Integer value = entry.getValue();
+            partials.put(category, partials.get(category) + value);
+        });
+    }
+
+    private Score calculateScoreAveragePerCategory(Map<ScoreCategory, Integer> partials, Score score) {
+        partials.forEach((scoreCategory, value) -> {
+            score.addCategoryScore(scoreCategory, Math.round(value / partials.size()));
+        });
+        return score;
+    }
+
 }
