@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Site implements HomePagePublisher {
+public class Site {
 
     private Set<PropertyType> propertyTypes;
     private Set<Service>  services;
@@ -109,6 +109,5 @@ public class Site implements HomePagePublisher {
     public void registerUser(User user) {
         users.add(user);
     }
-
 
 }

@@ -7,7 +7,7 @@ public class ReservationAcceptedBody extends MailBody {
     public String getMessage(Reservation reservation) {
         return reservation.getOccupant().getName()
                 + " " + reservation.getOccupant().getLastName() + " has requested a reservation for "
-                + reservation.getPublication().getType().getName() + " - " + reservation.getPublication().getCity()
-                + ", " + reservation.getPublication().getAddress();
+                + reservation.getPublication().getProperty().getType().getName() + " - " + reservation.getPublication().getProperty().getCity()
+                + ", " + reservation.getPublication().getProperty().getAddress();
     }
 }

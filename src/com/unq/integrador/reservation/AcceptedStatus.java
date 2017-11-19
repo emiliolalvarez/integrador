@@ -7,19 +7,13 @@ public class AcceptedStatus extends Status {
     }
 
     @Override
-    public void accept() {
-       System.out.println("Reservation was already accepted");
-    }
+    public void accept() {}
 
     @Override
-    public void reject() {
-        System.out.println("Could not reject an already accepted reservation");
-    }
+    public void reject() {}
 
     @Override
-    public void pending() {
-        System.out.println("Could not set as pending an already accepted reservation");
-    }
+    public void pending() {}
 
     @Override
     public void finalize() {

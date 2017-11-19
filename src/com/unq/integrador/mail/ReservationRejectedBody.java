@@ -7,7 +7,8 @@ public class ReservationRejectedBody extends MailBody {
     public String getMessage(Reservation reservation) {
         return reservation.getPublication().getOwner().getName()
                 + " " + reservation.getPublication().getOwner().getLastName() + " has rejected your reservation for "
-                + reservation.getPublication().getType().getName() + " - " + reservation.getPublication().getCity()
-                + ", " + reservation.getPublication().getAddress();
+                + reservation.getPublication().getProperty().getType().getName() + " - "
+                + reservation.getPublication().getProperty().getCity()
+                + ", " + reservation.getPublication().getProperty().getAddress();
     }
 }

@@ -12,6 +12,6 @@ public class CountryFilter implements Filter {
 
     @Override
     public Boolean eval(Publication publication) {
-        return publication.getCountry().equals(country);
+        return publication.getProperty().getCountry().equals(country);
     }
 }

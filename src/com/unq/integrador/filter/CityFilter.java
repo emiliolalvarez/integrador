@@ -12,6 +12,6 @@ public class CityFilter implements Filter {
 
     @Override
     public Boolean eval(Publication publication) {
-        return publication.getCity().equals(city);
+        return publication.getProperty().getCity().equals(city);
     }
 }

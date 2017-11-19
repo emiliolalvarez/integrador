@@ -75,12 +75,12 @@ public class User {
     }
 
     public List<Reservation> getCityReservations(String city) {
-       return reservations.stream().filter(reservation -> reservation.getPublication().getCity().equals(city))
+       return reservations.stream().filter(reservation -> reservation.getPublication().getProperty().getCity().equals(city))
                .collect(Collectors.toList());
     }
 
     public Set<String> getReservationsCities() {
-       return this.getReservations().stream().map(reservation -> reservation.getPublication().getCity())
+       return this.getReservations().stream().map(reservation -> reservation.getPublication().getProperty().getCity())
                .collect(Collectors.toSet());
     }
 

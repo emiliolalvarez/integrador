@@ -13,6 +13,6 @@ public class HasServiceFilter implements Filter {
 
     @Override
     public Boolean eval(Publication publication) {
-        return publication.getServices().stream().filter(srv -> srv.getName().equals(service.getName())).count() > 0;
+        return publication.getProperty().getServices().stream().filter(srv -> srv.getName().equals(service.getName())).count() > 0;
     }
 }
