@@ -1,11 +1,15 @@
 package com.unq.integrador.test;
 
-
 import com.unq.integrador.publication.PaymentOption;
 import com.unq.integrador.publication.PricePeriod;
 import com.unq.integrador.publication.Property;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.reservation.Reservation;
+import com.unq.integrador.score.PropertyScore;
+import com.unq.integrador.score.Score;
+import com.unq.integrador.score.category.PropertyScoreCategory;
+import com.unq.integrador.score.category.value.PropertyScoreValue;
+import com.unq.integrador.score.category.value.ScoreValue;
 import com.unq.integrador.site.HomePagePublisher;
 import com.unq.integrador.site.PopUpWindow;
 import com.unq.integrador.site.PropertyType;
@@ -14,10 +18,16 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.internal.util.collections.ArrayUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.*;
 
@@ -34,6 +44,9 @@ public class PublicationTest {
 	private Property property;
 	private LocalTime checkIn;
 	private LocalTime checkOut;
+    private PropertyScoreCategory category1;
+    private PropertyScoreCategory category2;
+    private PropertyScoreCategory category3;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -53,6 +66,10 @@ public class PublicationTest {
         endDate = startDate.plusDays(30);
         reservation = new Reservation(occupant, publication, startDate, endDate);
         dummyReservation = mock(Reservation.class);
+
+        category1 = getPropertyScoreCategoryMock("Category1");
+        category2 = getPropertyScoreCategoryMock("Category2");
+        category3 = getPropertyScoreCategoryMock("Category3");
 	}
 
 
@@ -82,15 +99,19 @@ public class PublicationTest {
 
     @Test
     public void getPriceForExistingPeriodDay() {
-	    PricePeriod pricePeriod = getPricePeriodMock(10, 1, 20, 2, 550f);
+	    LocalDate date = LocalDate.parse("2017-01-15");
+	    LocalDate[] dates = {date};
+	    PricePeriod pricePeriod = getPricePeriodMock(dates, true, 550f);
         publication.addPricePeriod(pricePeriod);
-        Float price = publication.getDayPrice(LocalDate.parse("2017-01-15"));
+        Float price = publication.getDayPrice(date);
         assertEquals(new Float(550), price);
     }
 
     @Test
     public void getPriceForNonExistingPeriodDay() {
-        PricePeriod pricePeriod = getPricePeriodMock(10, 1, 20, 2, 550f);
+        LocalDate date = LocalDate.parse("2017-01-15");
+        LocalDate[] dates = {date};
+        PricePeriod pricePeriod = getPricePeriodMock(dates,false, 550f);
         publication.addPricePeriod(pricePeriod);
         Float price = publication.getDayPrice(LocalDate.parse("2017-03-15"));
         assertEquals(new Float(0), price);
@@ -98,12 +119,15 @@ public class PublicationTest {
 
     @Test
     public void getPriceForDateRange() {
-        PricePeriod period1 = getPricePeriodMock(10, 1, 20, 1, 550f);
-        PricePeriod period2 = getPricePeriodMock(21, 1, 22, 1, 400f);
-        PricePeriod period3 = getPricePeriodMock(23, 1, 21, 2, 300f);
+	    LocalDate[] period1Dates = {LocalDate.parse("2017-01-19"), LocalDate.parse("2017-01-20")};
+        LocalDate[] period2Dates = {LocalDate.parse("2017-01-21"), LocalDate.parse("2017-01-22")};
+        LocalDate[] period3Dates = {LocalDate.parse("2017-01-23")};
+        PricePeriod period1 = getPricePeriodMock(period1Dates, true, 550f);
+        PricePeriod period2 = getPricePeriodMock(period2Dates, true, 400f);
+        PricePeriod period3 = getPricePeriodMock(period3Dates, true, 300f);
         LocalDate start = LocalDate.parse("2017-01-19");
         LocalDate end = LocalDate.parse("2017-01-23");
-        //2 days from period1 and 2days from period2
+        //2 days from period1 and 2days from period2 and 1day from period3
         publication.addPricePeriod(period1);
         publication.addPricePeriod(period2);
         publication.addPricePeriod(period3);
@@ -165,7 +189,6 @@ public class PublicationTest {
         reservation.cancel();
         verify(application).popUp("El/la " + type.getName()
                 + " que te interesa se ha liberado! Corre a reservarlo!","green", 14);
-
     }
 
     @Test
@@ -177,19 +200,55 @@ public class PublicationTest {
 	    verify(occupant, only()).addReservation(dummyReservation);
     }
 
+    @Test
+    public void getPropertyScore() {
+        Reservation reservation1 = getReservationWithPropertyScoreMock(new PropertyScoreValue[]{getPropertyScoreValue(category1, 3), getPropertyScoreValue(category2, 4), getPropertyScoreValue(category3, 5)});
+        Reservation reservation2 = getReservationWithPropertyScoreMock(new PropertyScoreValue[]{getPropertyScoreValue(category1, 3), getPropertyScoreValue(category2, 2), getPropertyScoreValue(category3, 3)});
+        publication.addReservation(reservation1);
+        publication.addReservation(reservation2);
+        Score score = publication.getPropertyScore();
+        Set<ScoreValue> scoreValues = score.getScoreValues();
+        assertEquals(3, scoreValues.size());
+        Integer scoreCategory0Value = scoreValues.stream().filter(scoreValue -> scoreValue.getCategory().equals(category1)).findFirst().get().getValue();
+        Integer scoreCategory1Value = scoreValues.stream().filter(scoreValue -> scoreValue.getCategory().equals(category2)).findFirst().get().getValue();
+        Integer scoreCategory2Value = scoreValues.stream().filter(scoreValue -> scoreValue.getCategory().equals(category3)).findFirst().get().getValue();
+        assertEquals(scoreCategory0Value, new Integer(3));
+        assertEquals(scoreCategory1Value, new Integer(3));
+        assertEquals(scoreCategory2Value, new Integer(4));
+    }
+
     private Property getPropertyMock(PropertyType type) {
         Property property = mock(Property.class);
         when(property.getType()).thenReturn(type);
         return property;
     }
 
-    private PricePeriod getPricePeriodMock(Integer fromDay, Integer fromMonth, Integer endDay, Integer endMonth, Float price) {
+    private PricePeriod getPricePeriodMock(LocalDate[] dates, Boolean isInPeriod, Float price) {
         PricePeriod pricePeriod = mock(PricePeriod.class);
-	    when(pricePeriod.getFromDay()).thenReturn(fromDay);
-        when(pricePeriod.getFromMonth()).thenReturn(fromMonth);
-        when(pricePeriod.getEndDay()).thenReturn(endDay);
-        when(pricePeriod.getEndMonth()).thenReturn(endMonth);
+        when(pricePeriod.isInPeriod(any())).thenReturn(false);
+        for (LocalDate date: dates) {
+            when(pricePeriod.isInPeriod(date)).thenReturn(isInPeriod);
+        }
         when(pricePeriod.getPrice()).thenReturn(price);
         return pricePeriod;
+    }
+
+    private Reservation getReservationWithPropertyScoreMock(PropertyScoreValue[] scoreValues) {
+	    Reservation reservation = mock(Reservation.class);
+	    PropertyScore score = mock(PropertyScore.class);
+	    Mockito.doReturn(Arrays.asList(scoreValues).stream().collect(Collectors.toSet())).when(score).getScoreValues();
+	    when(reservation.getPropertyScore()).thenReturn(score);
+	    when(reservation.getOccupant()).thenReturn(occupant);
+	    return reservation;
+    }
+
+    private PropertyScoreCategory getPropertyScoreCategoryMock(String name) {
+	    PropertyScoreCategory category = mock(PropertyScoreCategory.class);
+	    when(category.getName()).thenReturn(name);
+	    return category;
+    }
+
+    private PropertyScoreValue getPropertyScoreValue(PropertyScoreCategory category, Integer value) {
+	    return new PropertyScoreValue(category, value);
     }
 }

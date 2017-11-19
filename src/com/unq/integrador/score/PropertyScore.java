@@ -1,15 +1,16 @@
 package com.unq.integrador.score;
 
+import com.unq.integrador.score.category.value.PropertyScoreValue;
+import com.unq.integrador.score.reviewer.ReviewerScore;
 import com.unq.integrador.user.User;
-import com.unq.integrador.score.category.PropertyScoreCategory;
 
-public class PropertyScore extends Score {
+public class PropertyScore extends ReviewerScore {
 
     public PropertyScore(User reviewer) {
         super(reviewer);
     }
 
-    public void addCategoryScore(PropertyScoreCategory category, Integer score) {
-        super.addCategoryScore(category, score);
+    public void addScoreValue(PropertyScoreValue value) {
+        super.addScoreValue(value);
     }
 }

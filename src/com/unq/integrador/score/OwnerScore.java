@@ -1,9 +1,10 @@
 package com.unq.integrador.score;
 
+import com.unq.integrador.score.category.value.OwnerScoreValue;
+import com.unq.integrador.score.reviewer.ReviewerScore;
 import com.unq.integrador.user.User;
-import com.unq.integrador.score.category.OwnerScoreCategory;
 
-public class OwnerScore extends Score {
+public class OwnerScore extends ReviewerScore {
 
 
     public OwnerScore(User reviewer) {
@@ -11,7 +12,7 @@ public class OwnerScore extends Score {
     }
 
 
-    public void addCategoryScore(OwnerScoreCategory category, Integer score) {
-        super.addCategoryScore(category, score);
+    public void addScoreValue(OwnerScoreValue value) {
+        super.addScoreValue(value);
     }
 }

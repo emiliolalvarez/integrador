@@ -1,33 +1,42 @@
 package com.unq.integrador.score;
 
-import com.unq.integrador.user.User;
+import com.unq.integrador.publication.PricePeriod;
 import com.unq.integrador.score.category.ScoreCategory;
+import com.unq.integrador.score.category.value.ScoreValue;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-public abstract class Score {
+public class Score {
 
-    private User reviewer;
-    private Map<ScoreCategory, Integer> scores;
 
-    public Score(User reviewer) {
-        this.reviewer = reviewer;
-        scores = new HashMap<>();
+    private Set<ScoreValue> scores;
+
+    public Score() {
+        scores = new HashSet<>();
     }
 
-    public void addCategoryScore(ScoreCategory category, Integer score) {
-        scores.put(category, score);
+    public void addScoreValue(ScoreValue value) {
+        ScoreValue current = getByScoreCategory(value.getCategory());
+        if (current != null) {
+            current.sum(value);
+        } else {
+            scores.add(value);
+        }
     }
 
-    public Map<ScoreCategory, Integer> getScores() {
+    public Set<ScoreValue> getScoreValues() {
         return scores;
     }
 
+    private ScoreValue getByScoreCategory(ScoreCategory category) {
+        Optional<ScoreValue> scoreValue = scores.stream().filter(value -> value.getCategory().getName().equals(category.getName())).findFirst();
+        return scoreValue.isPresent() ? scoreValue.get() : null;
+    }
+
     public float getAverage() {
-        return scores.entrySet().stream().mapToInt(entry -> entry.getValue()).sum() / scores.size();
+        return scores.stream().mapToInt(value -> value.getValue()).sum() / scores.size();
     }
 
  }

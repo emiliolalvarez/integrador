@@ -1,5 +1,7 @@
 package com.unq.integrador.publication;
 
+import java.time.LocalDate;
+
 public class PricePeriod {
 
     private Integer fromMonth;
@@ -54,5 +56,15 @@ public class PricePeriod {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public Boolean isInPeriod(LocalDate date) {
+        return (getFromMonth() == date.getMonthValue() && getEndMonth() == date.getMonthValue()
+                && getFromDay() <= date.getDayOfMonth() && date.getDayOfMonth() <= getEndDay())
+                || (getFromMonth() == date.getMonthValue() && getEndMonth() > date.getMonthValue()
+                && getFromDay() <= date.getDayOfMonth())
+                || (getFromMonth() < date.getMonthValue() && date.getMonthValue() == getEndMonth()
+                && date.getDayOfMonth() <= getEndDay())
+                || (getFromMonth() < date.getMonthValue() && date.getMonthValue() < getEndMonth());
     }
 }

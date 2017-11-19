@@ -1,5 +1,7 @@
 package com.unq.integrador.publication;
 
+import com.unq.integrador.score.Score;
+import com.unq.integrador.score.category.value.ScoreValue;
 import com.unq.integrador.site.HomePagePublisher;
 import com.unq.integrador.site.PopUpWindow;
 import com.unq.integrador.user.User;
@@ -10,10 +12,9 @@ import java.util.*;
 
 public class Publication implements PublicationSubject {
 
-
     private Property property;
-    private LocalTime checkout;
-    private LocalTime checkin;
+    private LocalTime checkOut;
+    private LocalTime checkIn;
     private Set<PaymentOption> paymentOptions;
     private Set<PricePeriod> pricePeriods;
     private List<Reservation> reservations;
@@ -36,19 +37,19 @@ public class Publication implements PublicationSubject {
     }
 
     public LocalTime getCheckOut() {
-        return checkout;
+        return checkOut;
     }
 
     public void setCheckOut(LocalTime checkout) {
-        this.checkout = checkout;
+        this.checkOut = checkout;
     }
 
     public LocalTime getCheckIn() {
-        return checkin;
+        return checkIn;
     }
 
     public void setCheckIn(LocalTime checkin) {
-        this.checkin = checkin;
+        this.checkIn = checkin;
     }
 
     public Set<PaymentOption> getPaymentOptions() {
@@ -100,18 +101,8 @@ public class Publication implements PublicationSubject {
 
     public Float getDayPrice(LocalDate date) {
         Optional<PricePeriod> result = getPricePeriods().stream()
-                .filter(pricePeriod -> dateIsInPricePeriod(date, pricePeriod)).findFirst();
+                .filter(pricePeriod -> pricePeriod.isInPeriod(date)).findFirst();
         return result.isPresent() ? result.get().getPrice() : 0;
-    }
-
-    private Boolean dateIsInPricePeriod(LocalDate date, PricePeriod pricePeriod) {
-        return (pricePeriod.getFromMonth() == date.getMonthValue() && pricePeriod.getEndMonth() == date.getMonthValue()
-            && pricePeriod.getFromDay() <= date.getDayOfMonth() && date.getDayOfMonth() <= pricePeriod.getEndDay())
-            || (pricePeriod.getFromMonth() == date.getMonthValue() && pricePeriod.getEndMonth() > date.getMonthValue()
-                    && pricePeriod.getFromDay() <= date.getDayOfMonth())
-            || (pricePeriod.getFromMonth() < date.getMonthValue() && date.getMonthValue() == pricePeriod.getEndMonth()
-                    && date.getDayOfMonth() <= pricePeriod.getEndDay())
-            || (pricePeriod.getFromMonth() < date.getMonthValue() && date.getMonthValue() < pricePeriod.getEndMonth());
     }
 
     public void modifyPrice(PricePeriod pricePeriod, Float price) {
@@ -129,6 +120,18 @@ public class Publication implements PublicationSubject {
     public void notifyCancelledReservation() {
         this.applications.forEach(application -> application.popUp("El/la " + this.property.getType().getName()
                 + " que te interesa se ha liberado! Corre a reservarlo!", "green", 14));
+    }
+
+    public Score getPropertyScore() {
+        Score globalScore = new Score();
+        Long totalScores = reservations.stream().filter(reservation -> reservation.getPropertyScore() != null).count();
+        reservations.stream().filter(reservation -> reservation.getPropertyScore() != null).forEach(reservation -> {
+            reservation.getPropertyScore().getScoreValues().forEach(scoreValue -> {
+                globalScore.addScoreValue(scoreValue);
+            });
+        });
+        globalScore.getScoreValues().forEach(scoreValue -> scoreValue.updateValue(Math.round(scoreValue.getValue() / totalScores)));
+        return globalScore;
     }
 
     public void registerPriceObserver(HomePagePublisher publisher) {
