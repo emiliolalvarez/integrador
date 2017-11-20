@@ -118,6 +118,16 @@ public class PublicationTest {
     }
 
     @Test
+    public void testPriceChangeNotification() {
+        when(pricePeriod.getPrice()).thenReturn(100f);
+        publication.addPricePeriod(pricePeriod);
+        publication.registerPriceObserver(publisher);
+        publication.modifyPrice(pricePeriod, 50f);
+        verify(publisher).publish("No te pierdas esta oferta: Un inmueble "
+                + type.getName() +" a tan sólo " + 50.0 +" pesos");
+    }
+
+    @Test
     public void getPriceForDateRange() {
 	    LocalDate[] period1Dates = {LocalDate.parse("2017-01-19"), LocalDate.parse("2017-01-20")};
         LocalDate[] period2Dates = {LocalDate.parse("2017-01-21"), LocalDate.parse("2017-01-22")};
@@ -173,16 +183,6 @@ public class PublicationTest {
     }
 
     @Test
-    public void testPriceChangeNotification() {
-        when(pricePeriod.getPrice()).thenReturn(100f);
-        publication.addPricePeriod(pricePeriod);
-        publication.registerPriceObserver(publisher);
-        publication.modifyPrice(pricePeriod, 50f);
-        verify(publisher).publish("No te pierdas esta oferta: Un inmueble "
-                + type.getName() +" a tan sólo " + 50.0 +" pesos");
-    }
-
-    @Test
     public void testReservationCancelledNotification() {
         publication.registerReservationCancelledObserver(application);
         reservation.setStatus(reservation.getAcceptedStatus());
@@ -192,7 +192,7 @@ public class PublicationTest {
     }
 
     @Test
-    public void addReservation() {
+    public void testAddReservation() {
         assertFalse(publication.getReservations().contains(dummyReservation));
         when(dummyReservation.getOccupant()).thenReturn(occupant);
         publication.addReservation(dummyReservation);
@@ -201,7 +201,7 @@ public class PublicationTest {
     }
 
     @Test
-    public void getPropertyScore() {
+    public void testGetPropertyScore() {
         Reservation reservation1 = getReservationWithPropertyScoreMock(new PropertyScoreValue[]{getPropertyScoreValue(category1, 3), getPropertyScoreValue(category2, 4), getPropertyScoreValue(category3, 5)});
         Reservation reservation2 = getReservationWithPropertyScoreMock(new PropertyScoreValue[]{getPropertyScoreValue(category1, 3), getPropertyScoreValue(category2, 2), getPropertyScoreValue(category3, 3)});
         publication.addReservation(reservation1);

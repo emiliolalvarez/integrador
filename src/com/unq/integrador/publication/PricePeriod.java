@@ -18,39 +18,23 @@ public class PricePeriod {
         this.price = price;
     }
 
-    public Integer getFromMonth() {
+    public Integer getStartMonth() {
         return fromMonth;
     }
 
-    public void setFromMonth(Integer fromMonth) {
-        this.fromMonth = fromMonth;
-    }
-
-    public Integer getFromDay() {
+    public Integer getStartDay() {
         return fromDay;
-    }
-
-    public void setFromDay(Integer fromDay) {
-        this.fromDay = fromDay;
     }
 
     public Integer getEndMonth() {
         return endMonth;
     }
 
-    public void setEndMonth(Integer endMonth) {
-        this.endMonth = endMonth;
-    }
-
     public Integer getEndDay() {
         return endDay;
     }
 
-    public void setEndDay(Integer endDay) {
-        this.endDay = endDay;
-    }
-
-    public float getPrice() {
+    public Float getPrice() {
         return price;
     }
 
@@ -59,12 +43,12 @@ public class PricePeriod {
     }
 
     public Boolean isInPeriod(LocalDate date) {
-        return (getFromMonth() == date.getMonthValue() && getEndMonth() == date.getMonthValue()
-                && getFromDay() <= date.getDayOfMonth() && date.getDayOfMonth() <= getEndDay())
-                || (getFromMonth() == date.getMonthValue() && getEndMonth() > date.getMonthValue()
-                && getFromDay() <= date.getDayOfMonth())
-                || (getFromMonth() < date.getMonthValue() && date.getMonthValue() == getEndMonth()
+        return (getStartMonth() == date.getMonthValue() && getEndMonth() == date.getMonthValue()
+                && getStartDay() <= date.getDayOfMonth() && date.getDayOfMonth() <= getEndDay())
+                || (getStartMonth() == date.getMonthValue() && getEndMonth() > date.getMonthValue()
+                && getStartDay() <= date.getDayOfMonth())
+                || (getStartMonth() < date.getMonthValue() && date.getMonthValue() == getEndMonth()
                 && date.getDayOfMonth() <= getEndDay())
-                || (getFromMonth() < date.getMonthValue() && date.getMonthValue() < getEndMonth());
+                || (getStartMonth() < date.getMonthValue() && date.getMonthValue() < getEndMonth());
     }
 }

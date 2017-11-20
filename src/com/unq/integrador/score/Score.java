@@ -17,12 +17,12 @@ public class Score {
         scores = new HashSet<>();
     }
 
-    public void addScoreValue(ScoreValue value) {
-        ScoreValue current = getByScoreCategory(value.getCategory());
+    public void addScoreValue(ScoreValue scoreValue) {
+        ScoreValue current = getByScoreCategory(scoreValue.getCategory());
         if (current != null) {
-            current.sum(value);
+            current.sum(scoreValue);
         } else {
-            scores.add(value);
+            scores.add(scoreValue);
         }
     }
 
@@ -35,8 +35,8 @@ public class Score {
         return scoreValue.isPresent() ? scoreValue.get() : null;
     }
 
-    public float getAverage() {
-        return scores.stream().mapToInt(value -> value.getValue()).sum() / scores.size();
+    public Float getAverage() {
+        return new Float(scores.stream().mapToInt(value -> value.getValue()).sum() / scores.size());
     }
 
  }
