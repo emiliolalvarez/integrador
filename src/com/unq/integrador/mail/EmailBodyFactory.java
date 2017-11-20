@@ -1,12 +1,12 @@
 package com.unq.integrador.mail;
 
-public class ReservationBody {
+public class EmailBodyFactory {
 
-    public MailBody getAcceptedBody() {
+    public EmailBody getRservationAcceptedBody() {
         return new ReservationAcceptedBody();
     }
 
-    public MailBody getRejectedBody() {
+    public EmailBody getReservationRejectedBody() {
         return new ReservationRejectedBody();
     }
 }

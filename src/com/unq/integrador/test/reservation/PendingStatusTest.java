@@ -1,7 +1,8 @@
 package com.unq.integrador.test.reservation;
 
+import com.unq.integrador.mail.EmailSender;
 import com.unq.integrador.mail.ReservationAcceptedBody;
-import com.unq.integrador.mail.ReservationBody;
+import com.unq.integrador.mail.EmailBodyFactory;
 import com.unq.integrador.mail.ReservationRejectedBody;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.reservation.*;
@@ -19,7 +20,6 @@ public class PendingStatusTest {
     private Reservation reservation;
     private Publication publication;
     private PendingStatus status;
-    private ReservationBody reservationBodyFactory;
     private String email;
     private ReservationAcceptedBody acceptedBody;
     private ReservationRejectedBody rejectedBody;
@@ -28,6 +28,8 @@ public class PendingStatusTest {
     private CancelledStatus cancelledStatus;
     private String acceptedBodyMessage;
     private String rejectedBodyMessage;
+    private EmailSender emailSender;
+    private EmailBodyFactory emailBodyFactory;
 
     @Before
     public void setUp() {
@@ -36,29 +38,32 @@ public class PendingStatusTest {
         rejectedBodyMessage = "Reservation rejected";
         preparePublicationMock();
         prepareReservationMock();
-        prepareReservationBodyFactoryMock();
-        status = new PendingStatus(reservation);
+        prepareBodyFactoryMock();
+        prepareEmailSenderMock();
+        status = new PendingStatus(reservation, emailSender);
     }
 
     @Test
     public void testAccept() {
-        status.setReservationBodyFactory(reservationBodyFactory);
         status.accept();
         verify(reservation).setStatus(acceptedStatus);
         verify(reservation).getPublication();
         verify(owner).getEmail();
+        verify(emailSender).getBodyFactory();
+        verify(emailBodyFactory).getRservationAcceptedBody();
         verify(acceptedBody).getMessage(reservation);
-        verify(reservation).sendMail(email, "Reservation request accepted", acceptedBodyMessage);
+        verify(emailSender).sendMail(email, "Reservation request accepted", acceptedBodyMessage);
     }
 
     @Test
     public void testReject() {
-        status.setReservationBodyFactory(reservationBodyFactory);
         status.reject();
         verify(reservation).setStatus(rejectedStatus);
         verify(occupant).getEmail();
+        verify(emailSender).getBodyFactory();
+        verify(emailBodyFactory).getReservationRejectedBody();
         verify(rejectedBody).getMessage(reservation);
-        verify(reservation).sendMail(email, "Reservation request rejected", rejectedBodyMessage);
+        verify(emailSender).sendMail(email, "Reservation request rejected", rejectedBodyMessage);
     }
 
     @Test
@@ -102,13 +107,18 @@ public class PendingStatusTest {
         when(reservation.getOccupant()).thenReturn(occupant);
     }
 
-    private void prepareReservationBodyFactoryMock() {
+    private void prepareBodyFactoryMock() {
         acceptedBody = mock(ReservationAcceptedBody.class);
         rejectedBody = mock(ReservationRejectedBody.class);
         when(acceptedBody.getMessage(reservation)).thenReturn(acceptedBodyMessage);
         when(rejectedBody.getMessage(reservation)).thenReturn(rejectedBodyMessage);
-        reservationBodyFactory = mock(ReservationBody.class);
-        when(reservationBodyFactory.getAcceptedBody()).thenReturn(acceptedBody);
-        when(reservationBodyFactory.getRejectedBody()).thenReturn(rejectedBody);
+        emailBodyFactory = mock(EmailBodyFactory.class);
+        when(emailBodyFactory.getRservationAcceptedBody()).thenReturn(acceptedBody);
+        when(emailBodyFactory.getReservationRejectedBody()).thenReturn(rejectedBody);
+    }
+
+    private void prepareEmailSenderMock() {
+        emailSender = mock(EmailSender.class);
+        when(emailSender.getBodyFactory()).thenReturn(emailBodyFactory);
     }
 }

@@ -1,6 +1,5 @@
 package com.unq.integrador.score;
 
-import com.unq.integrador.publication.PricePeriod;
 import com.unq.integrador.score.category.ScoreCategory;
 import com.unq.integrador.score.category.value.ScoreValue;
 

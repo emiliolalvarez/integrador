@@ -9,7 +9,7 @@ import com.unq.integrador.score.reviewer.PropertyScore;
 
 import java.time.LocalDate;
 
-public class Reservation implements MailServer {
+public class Reservation {
 
     private AcceptedStatus acceptedStatus;
     private CancelledStatus cancelledStatus;
@@ -124,11 +124,4 @@ public class Reservation implements MailServer {
     }
 
     public void finalize() { status.finalize(); }
-
-    @Override
-    public void sendMail(String destinationAddress, String subject, String body) {
-        System.out.println("Sending email to " + destinationAddress);
-        System.out.println("Subject: " + subject);
-        System.out.println(body);
-    }
 }

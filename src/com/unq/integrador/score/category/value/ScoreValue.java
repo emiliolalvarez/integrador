@@ -1,6 +1,5 @@
 package com.unq.integrador.score.category.value;
 
-import com.unq.integrador.score.Score;
 import com.unq.integrador.score.category.ScoreCategory;
 
 public abstract class ScoreValue {

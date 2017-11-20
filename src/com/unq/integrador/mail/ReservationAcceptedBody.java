@@ -2,7 +2,7 @@ package com.unq.integrador.mail;
 
 import com.unq.integrador.reservation.Reservation;
 
-public class ReservationAcceptedBody extends MailBody {
+public class ReservationAcceptedBody extends EmailBody {
     @Override
     public String getMessage(Reservation reservation) {
         return reservation.getOccupant().getName()

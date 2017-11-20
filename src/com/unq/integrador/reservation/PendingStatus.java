@@ -1,43 +1,40 @@
 package com.unq.integrador.reservation;
 
-import com.unq.integrador.mail.ReservationBody;
+import com.unq.integrador.mail.EmailSender;
 
 public class PendingStatus extends Status {
-    private ReservationBody emailBodyFactory;
+    private EmailSender emailSender;
 
     public PendingStatus(Reservation reservation) {
         super(reservation);
-        emailBodyFactory = new ReservationBody();
-
+        emailSender = new EmailSender();
     }
 
-    public void setReservationBodyFactory(ReservationBody factory) {
-        emailBodyFactory = factory;
+    public PendingStatus(Reservation reservation, EmailSender emailSender) {
+        super(reservation);
+        this.emailSender = emailSender;
     }
+
 
     @Override
     public void accept() {
         reservation.setStatus(reservation.getAcceptedStatus());
-        reservation.sendMail(reservation.getPublication().getOwner().getEmail(), "Reservation request accepted",
-                emailBodyFactory.getAcceptedBody().getMessage(reservation));
+        emailSender.sendMail(reservation.getPublication().getOwner().getEmail(), "Reservation request accepted",
+                emailSender.getBodyFactory().getRservationAcceptedBody().getMessage(reservation));
     }
 
     @Override
     public void reject() {
         reservation.setStatus(reservation.getRejectedStatus());
-        reservation.sendMail(reservation.getOccupant().getEmail(), "Reservation request rejected",
-                emailBodyFactory.getRejectedBody().getMessage(reservation));
+        emailSender.sendMail(reservation.getOccupant().getEmail(), "Reservation request rejected",
+                emailSender.getBodyFactory().getReservationRejectedBody().getMessage(reservation));
     }
 
     @Override
-    public void pending() {
-        System.out.println("Reservation is already pending");
-    }
+    public void pending() {}
 
     @Override
-    public void finalize() {
-        System.out.println("Could not finalize a non-accepted reservation");
-    }
+    public void finalize() {}
 
     @Override
     public void cancel() {
