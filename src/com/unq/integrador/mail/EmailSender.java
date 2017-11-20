@@ -8,6 +8,10 @@ public class EmailSender implements MailServer {
         this.emailBodyFactory = new EmailBodyFactory();
     }
 
+    public EmailSender(EmailBodyFactory emailBodyFactory) {
+        this.emailBodyFactory = emailBodyFactory;
+    }
+
     @Override
     public void sendMail(String destinationAddress, String subject, String body) {
 
