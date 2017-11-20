@@ -50,8 +50,8 @@ public class PendingStatusTest {
         verify(reservation).getPublication();
         verify(owner).getEmail();
         verify(emailSender).getBodyFactory();
-        verify(emailBodyFactory).getRservationAcceptedBody();
-        verify(acceptedBody).getMessage(reservation);
+        verify(emailBodyFactory).getReservationAcceptedBody(reservation);
+        verify(acceptedBody).getMessage();
         verify(emailSender).sendMail(email, "Reservation request accepted", acceptedBodyMessage);
     }
 
@@ -61,8 +61,8 @@ public class PendingStatusTest {
         verify(reservation).setStatus(rejectedStatus);
         verify(occupant).getEmail();
         verify(emailSender).getBodyFactory();
-        verify(emailBodyFactory).getReservationRejectedBody();
-        verify(rejectedBody).getMessage(reservation);
+        verify(emailBodyFactory).getReservationRejectedBody(reservation);
+        verify(rejectedBody).getMessage();
         verify(emailSender).sendMail(email, "Reservation request rejected", rejectedBodyMessage);
     }
 
@@ -110,11 +110,11 @@ public class PendingStatusTest {
     private void prepareBodyFactoryMock() {
         acceptedBody = mock(ReservationAcceptedBody.class);
         rejectedBody = mock(ReservationRejectedBody.class);
-        when(acceptedBody.getMessage(reservation)).thenReturn(acceptedBodyMessage);
-        when(rejectedBody.getMessage(reservation)).thenReturn(rejectedBodyMessage);
+        when(acceptedBody.getMessage()).thenReturn(acceptedBodyMessage);
+        when(rejectedBody.getMessage()).thenReturn(rejectedBodyMessage);
         emailBodyFactory = mock(EmailBodyFactory.class);
-        when(emailBodyFactory.getRservationAcceptedBody()).thenReturn(acceptedBody);
-        when(emailBodyFactory.getReservationRejectedBody()).thenReturn(rejectedBody);
+        when(emailBodyFactory.getReservationAcceptedBody(reservation)).thenReturn(acceptedBody);
+        when(emailBodyFactory.getReservationRejectedBody(reservation)).thenReturn(rejectedBody);
     }
 
     private void prepareEmailSenderMock() {

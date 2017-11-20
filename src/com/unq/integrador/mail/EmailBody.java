@@ -1,9 +1,7 @@
 package com.unq.integrador.mail;
 
-import com.unq.integrador.reservation.Reservation;
+public interface EmailBody {
 
-public abstract class EmailBody {
-
-    public abstract String getMessage(Reservation reservation);
+    String getMessage();
 
 }

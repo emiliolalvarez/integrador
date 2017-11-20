@@ -20,14 +20,14 @@ public class PendingStatus extends Status {
     public void accept() {
         reservation.setStatus(reservation.getAcceptedStatus());
         emailSender.sendMail(reservation.getPublication().getOwner().getEmail(), "Reservation request accepted",
-                emailSender.getBodyFactory().getRservationAcceptedBody().getMessage(reservation));
+                emailSender.getBodyFactory().getReservationAcceptedBody(reservation).getMessage());
     }
 
     @Override
     public void reject() {
         reservation.setStatus(reservation.getRejectedStatus());
         emailSender.sendMail(reservation.getOccupant().getEmail(), "Reservation request rejected",
-                emailSender.getBodyFactory().getReservationRejectedBody().getMessage(reservation));
+                emailSender.getBodyFactory().getReservationRejectedBody(reservation).getMessage());
     }
 
     @Override
