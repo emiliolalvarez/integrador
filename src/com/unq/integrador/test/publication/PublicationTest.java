@@ -5,7 +5,7 @@ import com.unq.integrador.publication.PricePeriod;
 import com.unq.integrador.publication.Property;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.reservation.Reservation;
-import com.unq.integrador.score.PropertyScore;
+import com.unq.integrador.score.reviewer.PropertyScore;
 import com.unq.integrador.score.Score;
 import com.unq.integrador.score.category.PropertyScoreCategory;
 import com.unq.integrador.score.category.value.PropertyScoreValue;
@@ -19,13 +19,11 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.util.collections.ArrayUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 

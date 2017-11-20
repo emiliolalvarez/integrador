@@ -2,10 +2,6 @@ package com.unq.integrador.user;
 
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.reservation.Reservation;
-import com.unq.integrador.score.OccupantScore;
-import com.unq.integrador.score.OwnerScore;
-import com.unq.integrador.score.Score;
-import com.unq.integrador.score.category.ScoreCategory;
 
 import java.time.LocalDate;
 import java.util.*;

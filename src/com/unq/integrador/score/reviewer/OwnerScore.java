@@ -1,4 +1,4 @@
-package com.unq.integrador.score;
+package com.unq.integrador.score.reviewer;
 
 import com.unq.integrador.score.category.value.OwnerScoreValue;
 import com.unq.integrador.score.reviewer.ReviewerScore;

@@ -3,9 +3,9 @@ package com.unq.integrador.reservation;
 import com.unq.integrador.user.User;
 import com.unq.integrador.mail.MailServer;
 import com.unq.integrador.publication.Publication;
-import com.unq.integrador.score.OccupantScore;
-import com.unq.integrador.score.OwnerScore;
-import com.unq.integrador.score.PropertyScore;
+import com.unq.integrador.score.reviewer.OccupantScore;
+import com.unq.integrador.score.reviewer.OwnerScore;
+import com.unq.integrador.score.reviewer.PropertyScore;
 
 import java.time.LocalDate;
 
