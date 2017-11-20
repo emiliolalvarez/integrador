@@ -7,9 +7,9 @@ public class PriceLowerThanFilter implements Filter {
 
     private final LocalDate startDate;
     private final LocalDate endDate;
-    private float price;
+    private final Float price;
 
-    public PriceLowerThanFilter(float price, LocalDate startDate, LocalDate endDate) {
+    public PriceLowerThanFilter(Float price, LocalDate startDate, LocalDate endDate) {
         this.price = price;
         this.startDate = startDate;
         this.endDate = endDate;
