@@ -4,10 +4,7 @@ import com.unq.integrador.mail.ReservationAcceptedBody;
 import com.unq.integrador.mail.ReservationBody;
 import com.unq.integrador.mail.ReservationRejectedBody;
 import com.unq.integrador.publication.Publication;
-import com.unq.integrador.reservation.AcceptedStatus;
-import com.unq.integrador.reservation.PendingStatus;
-import com.unq.integrador.reservation.RejectedStatus;
-import com.unq.integrador.reservation.Reservation;
+import com.unq.integrador.reservation.*;
 import com.unq.integrador.user.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +25,7 @@ public class PendingStatusTest {
     private ReservationRejectedBody rejectedBody;
     private AcceptedStatus acceptedStatus;
     private RejectedStatus rejectedStatus;
+    private CancelledStatus cancelledStatus;
     private String acceptedBodyMessage;
     private String rejectedBodyMessage;
 
@@ -63,6 +61,26 @@ public class PendingStatusTest {
         verify(reservation).sendMail(email, "Reservation request rejected", rejectedBodyMessage);
     }
 
+    @Test
+    public void testCancel() {
+        status.cancel();
+        verify(reservation).setStatus(cancelledStatus);
+        verify(reservation).getPublication();
+        verify(publication).notifyCancelledReservation();
+    }
+
+    @Test
+    public void testPending() {
+        status.pending();
+        verifyZeroInteractions(reservation);
+    }
+
+    @Test
+    public void testFinalize() {
+        status.finalize();
+        verifyZeroInteractions(reservation);
+    }
+
     private void preparePublicationMock() {
         owner = mock(User.class);
         publication = mock(Publication.class);
@@ -74,11 +92,13 @@ public class PendingStatusTest {
         occupant = mock(User.class);
         acceptedStatus = mock(AcceptedStatus.class);
         rejectedStatus = mock(RejectedStatus.class);
+        cancelledStatus = mock(CancelledStatus.class);
         reservation = mock(Reservation.class);
         when(occupant.getEmail()).thenReturn(email);
         when(reservation.getPublication()).thenReturn(publication);
         when(reservation.getAcceptedStatus()).thenReturn(acceptedStatus);
         when(reservation.getRejectedStatus()).thenReturn(rejectedStatus);
+        when(reservation.getCancelledStatus()).thenReturn(cancelledStatus);
         when(reservation.getOccupant()).thenReturn(occupant);
     }
 

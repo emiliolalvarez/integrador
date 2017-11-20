@@ -1,14 +1,12 @@
 package com.unq.integrador.test.reservation;
 
-import com.unq.integrador.mail.ReservationAcceptedBody;
-import com.unq.integrador.mail.ReservationBody;
-import com.unq.integrador.mail.ReservationRejectedBody;
 import com.unq.integrador.publication.Publication;
-import com.unq.integrador.reservation.*;
-import com.unq.integrador.user.User;
+import com.unq.integrador.reservation.AcceptedStatus;
+import com.unq.integrador.reservation.CancelledStatus;
+import com.unq.integrador.reservation.FinalizedStatus;
+import com.unq.integrador.reservation.Reservation;
 import org.junit.Before;
 import org.junit.Test;
-
 
 import static org.mockito.Mockito.*;
 
@@ -43,6 +41,25 @@ public class AcceptedStatusTest {
         status.finalize();
         verify(reservation).setStatus(finalizedStatus);
 
+    }
+
+    @Test
+    public void testAccept() {
+        status.accept();
+        verifyZeroInteractions(reservation);
+    }
+
+    @Test
+    public void testReject() {
+        status.reject();
+        verifyZeroInteractions(reservation);
+    }
+
+
+    @Test
+    public void testPending() {
+        status.pending();
+        verifyZeroInteractions(reservation);
     }
 
     private Reservation prepareReservationMock() {
