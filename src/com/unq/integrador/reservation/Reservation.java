@@ -75,24 +75,12 @@ public class Reservation implements MailServer {
         return publication;
     }
 
-    public void setOccupant(User occupant) {
-        this.occupant = occupant;
-    }
-
     public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     public LocalDate getEndDate() {
         return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
     }
 
     public OwnerScore getOwnerScore() {
@@ -134,6 +122,8 @@ public class Reservation implements MailServer {
     public void pending() {
         status.pending();
     }
+
+    public void finalize() { status.finalize(); }
 
     @Override
     public void sendMail(String destinationAddress, String subject, String body) {

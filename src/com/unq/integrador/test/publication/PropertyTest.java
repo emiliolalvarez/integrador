@@ -1,4 +1,4 @@
-package com.unq.integrador.test;
+package com.unq.integrador.test.publication;
 
 import com.unq.integrador.publication.Picture;
 import com.unq.integrador.publication.Property;

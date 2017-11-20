@@ -1,7 +1,6 @@
 package com.unq.integrador.publication;
 
 import com.unq.integrador.score.Score;
-import com.unq.integrador.score.category.value.ScoreValue;
 import com.unq.integrador.site.HomePagePublisher;
 import com.unq.integrador.site.PopUpWindow;
 import com.unq.integrador.user.User;

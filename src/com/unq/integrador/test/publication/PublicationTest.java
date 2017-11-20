@@ -1,4 +1,4 @@
-package com.unq.integrador.test;
+package com.unq.integrador.test.publication;
 
 import com.unq.integrador.publication.PaymentOption;
 import com.unq.integrador.publication.PricePeriod;
@@ -251,4 +251,5 @@ public class PublicationTest {
     private PropertyScoreValue getPropertyScoreValue(PropertyScoreCategory category, Integer value) {
 	    return new PropertyScoreValue(category, value);
     }
+
 }

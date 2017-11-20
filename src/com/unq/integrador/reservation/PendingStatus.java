@@ -1,9 +1,6 @@
 package com.unq.integrador.reservation;
 
-import com.unq.integrador.mail.MailBody;
-import com.unq.integrador.mail.ReservationAcceptedBody;
 import com.unq.integrador.mail.ReservationBody;
-import com.unq.integrador.mail.ReservationRejectedBody;
 
 public class PendingStatus extends Status {
     private ReservationBody emailBodyFactory;
@@ -14,10 +11,14 @@ public class PendingStatus extends Status {
 
     }
 
+    public void setReservationBodyFactory(ReservationBody factory) {
+        emailBodyFactory = factory;
+    }
+
     @Override
     public void accept() {
         reservation.setStatus(reservation.getAcceptedStatus());
-        reservation.sendMail(reservation.getPublication().getOwner().getEmail(), "Reservation request",
+        reservation.sendMail(reservation.getPublication().getOwner().getEmail(), "Reservation request accepted",
                 emailBodyFactory.getAcceptedBody().getMessage(reservation));
     }
 

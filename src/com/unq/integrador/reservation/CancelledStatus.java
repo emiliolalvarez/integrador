@@ -1,6 +1,6 @@
 package com.unq.integrador.reservation;
 
-class CancelledStatus extends Status {
+public class CancelledStatus extends Status {
 
     public CancelledStatus(Reservation reservation) {
         super(reservation);
