@@ -10,9 +10,7 @@ import com.unq.integrador.score.Score;
 import com.unq.integrador.score.category.PropertyScoreCategory;
 import com.unq.integrador.score.category.value.PropertyScoreValue;
 import com.unq.integrador.score.category.value.ScoreValue;
-import com.unq.integrador.site.HomePagePublisher;
-import com.unq.integrador.site.PopUpWindow;
-import com.unq.integrador.site.PropertyType;
+import com.unq.integrador.site.*;
 import com.unq.integrador.user.User;
 import static org.junit.Assert.*;
 
@@ -45,6 +43,7 @@ public class PublicationTest {
     private PropertyScoreCategory category1;
     private PropertyScoreCategory category2;
     private PropertyScoreCategory category3;
+    private NotificationManager notificationManager;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -53,7 +52,9 @@ public class PublicationTest {
 		publisher = mock(HomePagePublisher.class);
 		pricePeriod = mock(PricePeriod.class);
 		property = getPropertyMock(type);
-		publication = new Publication(user, property);
+        notificationManager = mock(NotificationManager.class);
+        publication = new Publication(user, property);
+        publication.setNotificationManager(notificationManager);
 
 		occupant = mock(User.class);
 		application = mock(PopUpWindow.class);
@@ -116,13 +117,14 @@ public class PublicationTest {
     }
 
     @Test
-    public void testPriceChangeNotification() {
+    public void testPriceLoweredNotification() {
+	    PriceLoweredObserver priceLoweredObserver = mock(PriceLoweredObserver.class);
         when(pricePeriod.getPrice()).thenReturn(100f);
         publication.addPricePeriod(pricePeriod);
-        publication.registerPriceObserver(publisher);
+        publication.registerObserver(priceLoweredObserver);
         publication.modifyPrice(pricePeriod, 50f);
-        verify(publisher).publish("No te pierdas esta oferta: Un inmueble "
-                + type.getName() +" a tan sólo " + 50.0 +" pesos");
+        verify(notificationManager).register(publication, priceLoweredObserver);
+        verify(notificationManager).notifyPriceLowered(publication, 50f);
     }
 
     @Test
@@ -182,11 +184,12 @@ public class PublicationTest {
 
     @Test
     public void testReservationCancelledNotification() {
-        publication.registerReservationCancelledObserver(application);
+	    ReservationCancelledObserver observer = mock(ReservationCancelledObserver.class);
+        publication.registerObserver(observer);
         reservation.setStatus(reservation.getAcceptedStatus());
         reservation.cancel();
-        verify(application).popUp("El/la " + type.getName()
-                + " que te interesa se ha liberado! Corre a reservarlo!","green", 14);
+        verify(notificationManager).register(publication, observer);
+        verify(notificationManager).notifyReservationCancelled(publication);
     }
 
     @Test

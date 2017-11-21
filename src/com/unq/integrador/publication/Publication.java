@@ -1,10 +1,11 @@
 package com.unq.integrador.publication;
 
-import com.unq.integrador.score.Score;
-import com.unq.integrador.site.HomePagePublisher;
-import com.unq.integrador.site.PopUpWindow;
-import com.unq.integrador.user.User;
 import com.unq.integrador.reservation.Reservation;
+import com.unq.integrador.score.Score;
+import com.unq.integrador.site.NotificationManager;
+import com.unq.integrador.site.PublicationObserver;
+import com.unq.integrador.user.User;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -18,16 +19,14 @@ public class Publication implements PublicationSubject {
     private Set<PricePeriod> pricePeriods;
     private List<Reservation> reservations;
     private User owner;
-    private List<HomePagePublisher> publishers;
-    private List<PopUpWindow> applications;
+    private NotificationManager notificationManager;
 
     public Publication(User owner, Property property) {
         this.owner = owner;
         reservations = new ArrayList<>();
         pricePeriods = new HashSet<>();
         paymentOptions = new HashSet<>();
-        publishers = new ArrayList<>();
-        applications = new ArrayList<>();
+        notificationManager = new NotificationManager();
         this.property = property;
     }
 
@@ -106,19 +105,17 @@ public class Publication implements PublicationSubject {
 
     public void modifyPrice(PricePeriod pricePeriod, Float price) {
         if (pricePeriod.getPrice() > price) {
-            this.notifyPriceChange(price);
+            this.notifyPriceLowered(price);
         }
         pricePeriod.setPrice(price);
     }
 
-    public void notifyPriceChange(Float price) {
-        this.publishers.forEach(publisher -> publisher.publish("No te pierdas esta oferta: Un inmueble "
-                + this.property.getType().getName() +" a tan sólo " + price +" pesos"));
+    public void notifyPriceLowered(Float price) {
+        this.notificationManager.notifyPriceLowered(this, price);
     }
 
     public void notifyCancelledReservation() {
-        this.applications.forEach(application -> application.popUp("El/la " + this.property.getType().getName()
-                + " que te interesa se ha liberado! Corre a reservarlo!", "green", 14));
+        this.notificationManager.notifyReservationCancelled(this);
     }
 
     public Score getPropertyScore() {
@@ -133,12 +130,11 @@ public class Publication implements PublicationSubject {
         return globalScore;
     }
 
-    public void registerPriceObserver(HomePagePublisher publisher) {
-        this.publishers.add(publisher);
+    public void registerObserver(PublicationObserver observer) {
+        notificationManager.register(this, observer);
     }
 
-    public void registerReservationCancelledObserver(PopUpWindow application) {
-        this.applications.add(application);
+    public void setNotificationManager(NotificationManager notificationManager) {
+        this.notificationManager = notificationManager;
     }
-
 }

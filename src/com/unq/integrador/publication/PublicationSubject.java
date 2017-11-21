@@ -2,11 +2,11 @@ package com.unq.integrador.publication;
 
 import com.unq.integrador.site.HomePagePublisher;
 import com.unq.integrador.site.PopUpWindow;
+import com.unq.integrador.site.PublicationObserver;
 
 public interface PublicationSubject {
 
-    public void notifyPriceChange(Float price);
-    public void notifyCancelledReservation();
-    public void registerPriceObserver(HomePagePublisher publisher);
-    public void registerReservationCancelledObserver(PopUpWindow application);
+    void notifyPriceLowered(Float price);
+    void notifyCancelledReservation();
+    void registerObserver(PublicationObserver observer);
 }
