@@ -24,7 +24,7 @@ public class OccupantScoreTest {
 
     @Test
     public void testAddScoreValue() {
-        ScoreValue scoreValue = mock(OccupantScoreValue.class);
+        OccupantScoreValue scoreValue = mock(OccupantScoreValue.class);
         assertEquals(0, occupantScore.getScoreValues().size());
         occupantScore.addScoreValue(scoreValue);
         assertEquals(1, occupantScore.getScoreValues().size());

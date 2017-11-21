@@ -24,7 +24,7 @@ public class OwnerScoreTest {
 
     @Test
     public void testAddScoreValue() {
-        ScoreValue scoreValue = mock(OwnerScoreValue.class);
+        OwnerScoreValue scoreValue = mock(OwnerScoreValue.class);
         assertEquals(0, ownerScore.getScoreValues().size());
         ownerScore.addScoreValue(scoreValue);
         assertEquals(1, ownerScore.getScoreValues().size());

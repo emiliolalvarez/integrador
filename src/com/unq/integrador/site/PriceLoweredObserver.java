@@ -4,7 +4,7 @@ import com.unq.integrador.publication.Publication;
 
 public class PriceLoweredObserver extends PublicationObserver {
 
-    HomePagePublisher publisher;
+    private HomePagePublisher publisher;
 
     public PriceLoweredObserver(HomePagePublisher publisher) {
         this.publisher = publisher;

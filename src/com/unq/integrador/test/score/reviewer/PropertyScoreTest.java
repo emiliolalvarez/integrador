@@ -24,7 +24,7 @@ public class PropertyScoreTest {
 
     @Test
     public void testAddScoreValue() {
-        ScoreValue scoreValue = mock(PropertyScoreValue.class);
+        PropertyScoreValue scoreValue = mock(PropertyScoreValue.class);
         assertEquals(0, propertyScore.getScoreValues().size());
         propertyScore.addScoreValue(scoreValue);
         assertEquals(1, propertyScore.getScoreValues().size());

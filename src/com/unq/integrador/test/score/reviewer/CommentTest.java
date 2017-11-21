@@ -19,8 +19,16 @@ public class CommentTest {
     }
 
     @Test
-    public void getCommentMessage() {
+    public void testGetCommentText() {
         assertEquals(text, comment.getComment());
     }
+
+    @Test
+    public void testSetCommentText() {
+        assertEquals(text, comment.getComment());
+        String newText = "New comment";
+        comment.setComment(newText);
+        assertEquals(newText, comment.getComment());
+   }
 
 }
