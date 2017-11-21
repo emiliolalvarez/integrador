@@ -93,7 +93,7 @@ public class User {
 
     /**
 
-     public Score getScoreAsOwner() {
+     public GlobalScore getScoreAsOwner() {
         Map<ScoreCategory, Integer> partials = new HashMap<>();
         publications.forEach(publication -> {
             publication.getReservations().forEach(reservation -> {
@@ -103,7 +103,7 @@ public class User {
         return calculateScoreAveragePerCategory(partials, new OwnerScore(this));
     }
 
-    public Score getScoreAsOccupant() {
+    public GlobalScore getScoreAsOccupant() {
         Map<ScoreCategory, Integer> partials = new HashMap<>();
         reservations.forEach(reservation -> {
             addToPartialScores(partials, reservation.getOccupantScore());
@@ -111,7 +111,7 @@ public class User {
         return calculateScoreAveragePerCategory(partials, new OccupantScore(this));
     }
 
-    private void addToPartialScores(Map<ScoreCategory, Integer> partials, Score score) {
+    private void addToPartialScores(Map<ScoreCategory, Integer> partials, GlobalScore score) {
         score.getScoreValues().entrySet().stream().forEach(entry -> {
             ScoreCategory category = entry.getKey();
             Integer value = entry.getValue();
@@ -119,7 +119,7 @@ public class User {
         });
     }
 
-    private Score calculateScoreAveragePerCategory(Map<ScoreCategory, Integer> partials, Score score) {
+    private GlobalScore calculateScoreAveragePerCategory(Map<ScoreCategory, Integer> partials, GlobalScore score) {
         partials.forEach((scoreCategory, value) -> {
             score.addScoreValue(scoreCategory, Math.round(value / partials.size()));
         });

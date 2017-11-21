@@ -1,6 +1,6 @@
 package com.unq.integrador.test.score;
 
-import com.unq.integrador.score.Score;
+import com.unq.integrador.score.GlobalScore;
 import com.unq.integrador.score.category.ScoreCategory;
 import com.unq.integrador.score.category.value.ScoreValue;
 import org.junit.Before;
@@ -11,9 +11,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ScoreTest {
+public class GlobalScoreTest {
 
-    private Score score;
+    private GlobalScore globalScore;
     private ScoreCategory scoreCategory;
     private Integer scoreCategoryValue;
     private ScoreValue scoreValue;
@@ -21,7 +21,7 @@ public class ScoreTest {
 
     @Before
     public void setUp() {
-        score = new Score();
+        globalScore = new GlobalScore();
         scoreCategoryValue = 5;
         scoreCategoryName = "Category 1";
         scoreCategory = getScoreCategoryMock(scoreCategoryName);
@@ -31,21 +31,21 @@ public class ScoreTest {
 
     @Test
     public void testAddingNewScoreValue() {
-        assertEquals(score.getScoreValues().size(), 0);
-        score.addScoreValue(scoreValue);
-        assertEquals(score.getScoreValues().size(), 1);
-        assertTrue(score.getScoreValues().contains(scoreValue));
+        assertEquals(globalScore.getScoreValues().size(), 0);
+        globalScore.addScoreValue(scoreValue);
+        assertEquals(globalScore.getScoreValues().size(), 1);
+        assertTrue(globalScore.getScoreValues().contains(scoreValue));
     }
 
     @Test
     public void testAddingExistentScoreValueWillUpdateScoreValue() {
         ScoreValue newScoreValue = mock(ScoreValue.class);
         when(newScoreValue.getCategory()).thenReturn(scoreCategory);
-        score.addScoreValue(scoreValue);
+        globalScore.addScoreValue(scoreValue);
         assertEquals(new Integer(5), scoreCategoryValue);
-        score.addScoreValue(newScoreValue);
+        globalScore.addScoreValue(newScoreValue);
         verify(scoreValue).sum(newScoreValue);
-        assertEquals(1, score.getScoreValues().size());
+        assertEquals(1, globalScore.getScoreValues().size());
     }
 
     @Test
@@ -54,9 +54,9 @@ public class ScoreTest {
         ScoreCategory scoreCategory2 = getScoreCategoryMock("Other category");
         when(scoreValue2.getCategory()).thenReturn(scoreCategory2);
         when(scoreValue2.getValue()).thenReturn(scoreCategoryValue - 1);
-        score.addScoreValue(scoreValue);
-        score.addScoreValue(scoreValue2);
-        assertEquals(new Float((scoreCategoryValue + scoreCategoryValue - 1) / 2 ), score.getAverage());
+        globalScore.addScoreValue(scoreValue);
+        globalScore.addScoreValue(scoreValue2);
+        assertEquals(new Float((scoreCategoryValue + scoreCategoryValue - 1) / 2 ), globalScore.getAverage());
     }
 
     private ScoreValue getScoreValueMock() {

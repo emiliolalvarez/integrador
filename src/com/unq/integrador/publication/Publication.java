@@ -1,7 +1,7 @@
 package com.unq.integrador.publication;
 
 import com.unq.integrador.reservation.Reservation;
-import com.unq.integrador.score.Score;
+import com.unq.integrador.score.GlobalScore;
 import com.unq.integrador.site.NotificationManager;
 import com.unq.integrador.site.PublicationObserver;
 import com.unq.integrador.user.User;
@@ -118,8 +118,8 @@ public class Publication implements PublicationSubject {
         this.notificationManager.notifyReservationCancelled(this);
     }
 
-    public Score getPropertyScore() {
-        Score globalScore = new Score();
+    public GlobalScore getPropertyScore() {
+        GlobalScore globalScore = new GlobalScore();
         Long totalScores = reservations.stream().filter(reservation -> reservation.getPropertyScore() != null).count();
         reservations.stream().filter(reservation -> reservation.getPropertyScore() != null).forEach(reservation -> {
             reservation.getPropertyScore().getScoreValues().forEach(scoreValue -> {

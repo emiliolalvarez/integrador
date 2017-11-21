@@ -1,5 +1,6 @@
 package com.unq.integrador.score.reviewer;
 
+import com.unq.integrador.score.GlobalScore;
 import com.unq.integrador.score.Score;
 import com.unq.integrador.user.User;
 

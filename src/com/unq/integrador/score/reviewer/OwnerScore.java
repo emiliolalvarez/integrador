@@ -11,7 +11,7 @@ public class OwnerScore extends ReviewerScore {
     }
 
 
-    public void addScoreValue(OwnerScoreValue value) {
-        super.addScoreValue(value);
+    public void addScoreValue(OwnerScoreValue scoreValue) {
+        add(scoreValue);
     }
 }

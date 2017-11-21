@@ -7,16 +7,28 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class Score {
+public abstract class Score {
 
-
-    private Set<ScoreValue> scores;
+    protected Set<ScoreValue> scores;
 
     public Score() {
         scores = new HashSet<>();
     }
 
-    public void addScoreValue(ScoreValue scoreValue) {
+    public Set<ScoreValue> getScoreValues() {
+        return scores;
+    }
+
+    public Float getAverage() {
+        return new Float(scores.stream().mapToInt(value -> value.getValue()).sum() / scores.size());
+    }
+
+    protected ScoreValue getByScoreCategory(ScoreCategory category) {
+        Optional<ScoreValue> scoreValue = scores.stream().filter(value -> value.getCategory().getName().equals(category.getName())).findFirst();
+        return scoreValue.isPresent() ? scoreValue.get() : null;
+    }
+
+    protected void add(ScoreValue scoreValue) {
         ScoreValue current = getByScoreCategory(scoreValue.getCategory());
         if (current != null) {
             current.sum(scoreValue);
@@ -24,18 +36,4 @@ public class Score {
             scores.add(scoreValue);
         }
     }
-
-    public Set<ScoreValue> getScoreValues() {
-        return scores;
-    }
-
-    private ScoreValue getByScoreCategory(ScoreCategory category) {
-        Optional<ScoreValue> scoreValue = scores.stream().filter(value -> value.getCategory().getName().equals(category.getName())).findFirst();
-        return scoreValue.isPresent() ? scoreValue.get() : null;
-    }
-
-    public Float getAverage() {
-        return new Float(scores.stream().mapToInt(value -> value.getValue()).sum() / scores.size());
-    }
-
- }
+}

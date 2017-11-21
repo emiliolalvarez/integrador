@@ -9,7 +9,7 @@ public class OccupantScore extends ReviewerScore {
         super(reviewer);
     }
 
-    public void addScoreValue(OccupantScoreValue value) {
-        super.addScoreValue(value);
+    public void addScoreValue(OccupantScoreValue scoreValue) {
+        add(scoreValue);
     }
 }
