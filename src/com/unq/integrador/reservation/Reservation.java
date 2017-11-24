@@ -1,5 +1,6 @@
 package com.unq.integrador.reservation;
 
+import com.unq.integrador.publication.PaymentOption;
 import com.unq.integrador.test.reservation.CouldNotRankNonFinalizedReservationException;
 import com.unq.integrador.user.User;
 import com.unq.integrador.publication.Publication;
@@ -25,6 +26,7 @@ public class Reservation {
     private OwnerScore ownerScore;
     private OccupantScore occupantScore;
     private PropertyScore propertyScore;
+    private PaymentOption paymentOption;
 
     public Reservation(User occupant, Publication publication, LocalDate startDate, LocalDate endDate) {
         this.publication = publication;
@@ -108,6 +110,14 @@ public class Reservation {
     public void setPropertyScore(PropertyScore propertyScore) throws CouldNotRankNonFinalizedReservationException {
         throwCouldNotRankNonFinalizedReservationExceptionIfNecessary();
         this.propertyScore = propertyScore;
+    }
+
+    public void setPaymentOption(PaymentOption paymentOption) {
+        this.paymentOption = paymentOption;
+    }
+
+    public PaymentOption getPaymentOption() {
+        return paymentOption;
     }
 
     public void accept() {

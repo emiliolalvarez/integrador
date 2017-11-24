@@ -1,5 +1,6 @@
 package com.unq.integrador.test.reservation;
 
+import com.unq.integrador.publication.PaymentOption;
 import com.unq.integrador.publication.Property;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.reservation.*;
@@ -35,7 +36,7 @@ public class ReservationTest {
     private OwnerScore ownerScore;
     private OccupantScore occupantScore;
     private PropertyScore propertyScore;
-
+    private PaymentOption paymentOption;
 
     @Before
     public void setUp() {
@@ -54,7 +55,7 @@ public class ReservationTest {
         ownerScore = mock(OwnerScore.class);
         occupantScore = mock(OccupantScore.class);
         propertyScore = mock(PropertyScore.class);
-
+        paymentOption = mock(PaymentOption.class);
     }
 
     @Test
@@ -197,5 +198,12 @@ public class ReservationTest {
     public void testIsFinalized() {
         reservation.setStatus(reservation.getFinalizedStatus());
         assertTrue(reservation.isFinalized());
+    }
+
+    @Test
+    public void testPaymentOption() {
+        assertNull(reservation.getPaymentOption());
+        reservation.setPaymentOption(paymentOption);
+        assertEquals(paymentOption, reservation.getPaymentOption());
     }
 }
