@@ -1,7 +1,7 @@
 package com.unq.integrador.reservation;
 
+import com.unq.integrador.test.reservation.CouldNotRankNonFinalizedReservationException;
 import com.unq.integrador.user.User;
-import com.unq.integrador.mail.MailServer;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.score.reviewer.OccupantScore;
 import com.unq.integrador.score.reviewer.OwnerScore;
@@ -87,7 +87,8 @@ public class Reservation {
         return ownerScore;
     }
 
-    public void setOwnerScore(OwnerScore ownerScore) {
+    public void setOwnerScore(OwnerScore ownerScore) throws CouldNotRankNonFinalizedReservationException {
+        throwCouldNotRankNonFinalizedReservationExceptionIfNecessary();
         this.ownerScore = ownerScore;
     }
 
@@ -95,7 +96,8 @@ public class Reservation {
         return occupantScore;
     }
 
-    public void setOccupantScore(OccupantScore occupantScore) {
+    public void setOccupantScore(OccupantScore occupantScore) throws CouldNotRankNonFinalizedReservationException {
+        throwCouldNotRankNonFinalizedReservationExceptionIfNecessary();
         this.occupantScore = occupantScore;
     }
 
@@ -103,7 +105,8 @@ public class Reservation {
         return propertyScore;
     }
 
-    public void setPropertyScore(PropertyScore propertyScore) {
+    public void setPropertyScore(PropertyScore propertyScore) throws CouldNotRankNonFinalizedReservationException {
+        throwCouldNotRankNonFinalizedReservationExceptionIfNecessary();
         this.propertyScore = propertyScore;
     }
 
@@ -127,5 +130,15 @@ public class Reservation {
 
     public Boolean isAccepted() {
         return status.equals(acceptedStatus);
+    }
+
+    public Boolean isFinalized() {
+        return status.equals(finalizedStatus);
+    }
+
+    private void throwCouldNotRankNonFinalizedReservationExceptionIfNecessary() throws CouldNotRankNonFinalizedReservationException {
+        if (!isFinalized()) {
+            throw new CouldNotRankNonFinalizedReservationException("Could not rank a non finalized reservation");
+        }
     }
 }

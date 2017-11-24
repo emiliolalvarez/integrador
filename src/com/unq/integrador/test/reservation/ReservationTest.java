@@ -105,24 +105,41 @@ public class ReservationTest {
     }
 
     @Test
-    public void testOwnerScore() {
+    public void testSetOwnerScoreOnFinzalizedReservation() throws Exception{
+        reservation.setStatus(reservation.getFinalizedStatus());
         assertEquals(null, reservation.getOwnerScore());
         reservation.setOwnerScore(ownerScore);
         assertEquals(ownerScore, reservation.getOwnerScore());
     }
+    @Test(expected = CouldNotRankNonFinalizedReservationException.class)
+    public void testSetOwnerScoreOnNonFinalizedReservation() throws Exception{
+        reservation.setOwnerScore(ownerScore);
+    }
 
     @Test
-    public void testOccupantScore() {
+    public void testSetOccupantScoreOnFinalizedReservation() throws Exception {
+        reservation.setStatus(reservation.getFinalizedStatus());
         assertEquals(null, reservation.getOccupantScore());
         reservation.setOccupantScore(occupantScore);
         assertEquals(occupantScore, reservation.getOccupantScore());
     }
 
+    @Test(expected = CouldNotRankNonFinalizedReservationException.class)
+    public void testSetOccupantScoreOnNonFinalizedReservation() throws Exception{
+        reservation.setOwnerScore(ownerScore);
+    }
+
     @Test
-    public void testPropertyScore() {
+    public void testSetPropertyScoreOnFinalizedReservation() throws Exception {
+        reservation.setStatus(reservation.getFinalizedStatus());
         assertEquals(null, reservation.getPropertyScore());
         reservation.setPropertyScore(propertyScore);
         assertEquals(propertyScore, reservation.getPropertyScore());
+    }
+
+    @Test(expected = CouldNotRankNonFinalizedReservationException.class)
+    public void testSetPropertyScoreOnNonFinalizedReservation() throws Exception{
+        reservation.setPropertyScore(propertyScore);
     }
 
     @Test
@@ -168,5 +185,17 @@ public class ReservationTest {
     @Test
     public void testGetOccupant() {
         assertEquals(occupant, reservation.getOccupant());
+    }
+
+    @Test
+    public void testIsAccepted() {
+        reservation.setStatus(reservation.getAcceptedStatus());
+        assertTrue(reservation.isAccepted());
+    }
+
+    @Test
+    public void testIsFinalized() {
+        reservation.setStatus(reservation.getFinalizedStatus());
+        assertTrue(reservation.isFinalized());
     }
 }
