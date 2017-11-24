@@ -1,5 +1,6 @@
 package com.unq.integrador.publication;
 
+import com.unq.integrador.reservation.AcceptedStatus;
 import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.score.GlobalScore;
 import com.unq.integrador.site.NotificationManager;
@@ -136,5 +137,15 @@ public class Publication implements PublicationSubject {
 
     public void setNotificationManager(NotificationManager notificationManager) {
         this.notificationManager = notificationManager;
+    }
+
+    public Boolean isAvailable(LocalDate startDate, LocalDate endDate) {
+        return !reservations.stream().filter(reservation -> reservation.isAccepted()).anyMatch(reservation ->
+            reservation.getStartDate().equals(startDate) || reservation.getEndDate().equals(endDate)
+            || reservation.getStartDate().equals(endDate) || reservation.getEndDate().equals(endDate)
+            || (reservation.getStartDate().isAfter(startDate) && reservation.getEndDate().isBefore(endDate))
+            || (reservation.getStartDate().isBefore(startDate) && reservation.getEndDate().isAfter(startDate))
+            || (reservation.getStartDate().isBefore(endDate) && reservation.getEndDate().isAfter(endDate))
+        );
     }
 }

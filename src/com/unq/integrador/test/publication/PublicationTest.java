@@ -31,12 +31,10 @@ public class PublicationTest {
 
 	private User user, occupant;
 	private PropertyType type;
-	private HomePagePublisher publisher;
 	private PricePeriod pricePeriod;
 	private Publication publication;
-	private PopUpWindow application;
 	private LocalDate startDate, endDate;
-	private Reservation reservation, dummyReservation;
+	private Reservation reservation;
 	private Property property;
 	private LocalTime checkIn;
 	private LocalTime checkOut;
@@ -49,7 +47,6 @@ public class PublicationTest {
 	public void setUp() throws Exception {
 		user = mock(User.class);
 		type = new PropertyType("apartment");
-		publisher = mock(HomePagePublisher.class);
 		pricePeriod = mock(PricePeriod.class);
 		property = getPropertyMock(type);
         notificationManager = mock(NotificationManager.class);
@@ -57,14 +54,12 @@ public class PublicationTest {
         publication.setNotificationManager(notificationManager);
 
 		occupant = mock(User.class);
-		application = mock(PopUpWindow.class);
 		startDate = LocalDate.now();
 		checkIn = LocalTime.parse("11 00 AM", DateTimeFormatter.ofPattern("hh mm a"));
 		checkOut = LocalTime.parse("09 00 AM", DateTimeFormatter.ofPattern("hh mm a"));
 
         endDate = startDate.plusDays(30);
-        reservation = new Reservation(occupant, publication, startDate, endDate);
-        dummyReservation = mock(Reservation.class);
+        reservation = mock(Reservation.class);
 
         category1 = getPropertyScoreCategoryMock("Category1");
         category2 = getPropertyScoreCategoryMock("Category2");
@@ -186,19 +181,18 @@ public class PublicationTest {
     public void testReservationCancelledNotification() {
 	    ReservationCancelledObserver observer = mock(ReservationCancelledObserver.class);
         publication.registerObserver(observer);
-        reservation.setStatus(reservation.getAcceptedStatus());
-        reservation.cancel();
+        publication.notifyCancelledReservation();
         verify(notificationManager).register(publication, observer);
         verify(notificationManager).notifyReservationCancelled(publication);
     }
 
     @Test
     public void testAddReservation() {
-        assertFalse(publication.getReservations().contains(dummyReservation));
-        when(dummyReservation.getOccupant()).thenReturn(occupant);
-        publication.addReservation(dummyReservation);
-	    assertTrue(publication.getReservations().contains(dummyReservation));
-	    verify(occupant, only()).addReservation(dummyReservation);
+        assertFalse(publication.getReservations().contains(reservation));
+        when(reservation.getOccupant()).thenReturn(occupant);
+        publication.addReservation(reservation);
+	    assertTrue(publication.getReservations().contains(reservation));
+	    verify(occupant, only()).addReservation(reservation);
     }
 
     @Test
@@ -216,6 +210,59 @@ public class PublicationTest {
         assertEquals(scoreCategory0Value, new Integer(3));
         assertEquals(scoreCategory1Value, new Integer(3));
         assertEquals(scoreCategory2Value, new Integer(4));
+    }
+
+    @Test
+    public void testIsAvailableWhenHasNoReservations() {
+        assertEquals(0, publication.getReservations().size());
+        assertTrue(publication.isAvailable(startDate, endDate));
+    }
+
+    @Test
+    public void testIsAvailableWhenNoAcceptedReservationInGivenDateRange() {
+        prepareReservationDateRange(endDate.plusDays(1), endDate.plusDays(20));
+        addAcceptedReservationToPublication();
+        assertTrue(publication.isAvailable(startDate, endDate));
+    }
+
+    @Test
+    public void testIsNotAvailableIfStartDateIsInAnyReservationDateRange() {
+        prepareReservationDateRange(startDate.minusDays(1), startDate.plusDays(5));
+        addAcceptedReservationToPublication();
+        assertFalse(publication.isAvailable(startDate, endDate));
+    }
+
+    @Test
+    public void testIsNotAvailableIfEndDateIsInAnyReservationDateRange() {
+        prepareReservationDateRange(endDate.minusDays(1), endDate.plusDays(1));
+        addAcceptedReservationToPublication();
+        assertFalse(publication.isAvailable(startDate, endDate));
+    }
+
+    @Test
+    public void isNotAvailableIfStartDateEqualsReservationRangeStartDate() {
+	    prepareReservationDateRange(startDate, startDate.plusDays(5));
+	    addAcceptedReservationToPublication();
+	    assertFalse(publication.isAvailable(startDate, endDate));
+    }
+
+    @Test
+    public void isNotAvailableIfReservationRangeIsIncludedInsideGivenRange() {
+        prepareReservationDateRange(startDate.plusDays(1), startDate.minusDays(1));
+        addAcceptedReservationToPublication();
+        assertFalse(publication.isAvailable(startDate, endDate));
+    }
+
+    private void prepareReservationDateRange(LocalDate startDate, LocalDate endDate) {
+        when(reservation.getStartDate()).thenReturn(startDate);
+        when(reservation.getEndDate()).thenReturn(endDate);
+    }
+
+    private void addAcceptedReservationToPublication() {
+        when(reservation.getOccupant()).thenReturn(occupant);
+        when(reservation.isAccepted()).thenReturn(true);
+        publication.addReservation(reservation);
+
     }
 
     private Property getPropertyMock(PropertyType type) {
@@ -252,5 +299,7 @@ public class PublicationTest {
     private PropertyScoreValue getPropertyScoreValue(PropertyScoreCategory category, Integer value) {
 	    return new PropertyScoreValue(category, value);
     }
+
+
 
 }

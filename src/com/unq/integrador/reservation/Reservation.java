@@ -124,4 +124,8 @@ public class Reservation {
     }
 
     public void finalize() { status.finalize(); }
+
+    public Boolean isAccepted() {
+        return status.equals(acceptedStatus);
+    }
 }
