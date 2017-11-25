@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,8 +56,8 @@ public class PublicationTest {
 
 		occupant = mock(User.class);
 		startDate = LocalDate.now();
-		checkIn = LocalTime.parse("11 00 AM", DateTimeFormatter.ofPattern("hh mm a"));
-		checkOut = LocalTime.parse("09 00 AM", DateTimeFormatter.ofPattern("hh mm a"));
+		checkIn = LocalTime.parse("11 00 AM", DateTimeFormatter.ofPattern("hh mm a", Locale.US));
+		checkOut = LocalTime.parse("09 00 AM", DateTimeFormatter.ofPattern("hh mm a", Locale.US));
 
         endDate = startDate.plusDays(30);
         reservation = mock(Reservation.class);
