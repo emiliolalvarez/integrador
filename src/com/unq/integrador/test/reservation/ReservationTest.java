@@ -201,7 +201,7 @@ public class ReservationTest {
     }
 
     @Test
-    public void testPaymentOption() {
+    public void testReservationPaymentOption() {
         assertNull(reservation.getPaymentOption());
         reservation.setPaymentOption(paymentOption);
         assertEquals(paymentOption, reservation.getPaymentOption());
