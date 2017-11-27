@@ -23,7 +23,11 @@ public abstract class Score {
         return new Float(scores.stream().mapToInt(value -> value.getValue()).sum() / scores.size());
     }
 
-    protected ScoreValue getByScoreCategory(ScoreCategory category) {
+    public boolean hasScoreValue(ScoreCategory category) {
+        return scores.stream().anyMatch(scoreValue -> scoreValue.getCategory().getName().equals(category.getName()));
+    }
+
+    public ScoreValue getByScoreCategory(ScoreCategory category) {
         Optional<ScoreValue> scoreValue = scores.stream().filter(value -> value.getCategory().getName().equals(category.getName())).findFirst();
         return scoreValue.isPresent() ? scoreValue.get() : null;
     }
