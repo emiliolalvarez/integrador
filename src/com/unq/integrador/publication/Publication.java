@@ -1,6 +1,5 @@
 package com.unq.integrador.publication;
 
-import com.unq.integrador.reservation.AcceptedStatus;
 import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.score.GlobalScore;
 import com.unq.integrador.site.NotificationManager;
