@@ -24,15 +24,10 @@ public class ReservationTest {
 
     private Publication publication;
     private Reservation reservation;
-    private Property property;
-    private User owner;
     private User occupant;
     private LocalDate startDate, endDate;
     private PendingStatus pendingStatus;
     private AcceptedStatus acceptedStatus;
-    private CancelledStatus cancelledStatus;
-    private RejectedStatus rejectedStatus;
-    private FinalizedStatus finalizedStatus;
     private OwnerScore ownerScore;
     private OccupantScore occupantScore;
     private PropertyScore propertyScore;
@@ -41,17 +36,12 @@ public class ReservationTest {
     @Before
     public void setUp() {
         occupant = mock(User.class);
-        owner = mock(User.class);
-        property = mock(Property.class);
         publication = mock(Publication.class);
         startDate = LocalDate.parse("2017-01-10");
         endDate = startDate.plusDays(20);
         reservation = new Reservation(occupant, publication, startDate, endDate);
         pendingStatus = mock(PendingStatus.class);
         acceptedStatus = mock(AcceptedStatus.class);
-        cancelledStatus = mock(CancelledStatus.class);
-        rejectedStatus = mock(RejectedStatus.class);
-        finalizedStatus = mock(FinalizedStatus.class);
         ownerScore = mock(OwnerScore.class);
         occupantScore = mock(OccupantScore.class);
         propertyScore = mock(PropertyScore.class);
