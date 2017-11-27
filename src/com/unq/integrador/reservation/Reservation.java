@@ -1,7 +1,6 @@
 package com.unq.integrador.reservation;
 
 import com.unq.integrador.publication.PaymentOption;
-import com.unq.integrador.test.reservation.CouldNotRankNonFinalizedReservationException;
 import com.unq.integrador.user.User;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.score.reviewer.OccupantScore;
@@ -89,7 +88,7 @@ public class Reservation {
         return ownerScore;
     }
 
-    public void setOwnerScore(OwnerScore ownerScore) throws CouldNotRankNonFinalizedReservationException {
+    public void setOwnerScore(OwnerScore ownerScore) throws CanNotRankNonFinalizedReservationException {
         throwCouldNotRankNonFinalizedReservationExceptionIfNecessary();
         this.ownerScore = ownerScore;
     }
@@ -98,7 +97,7 @@ public class Reservation {
         return occupantScore;
     }
 
-    public void setOccupantScore(OccupantScore occupantScore) throws CouldNotRankNonFinalizedReservationException {
+    public void setOccupantScore(OccupantScore occupantScore) throws CanNotRankNonFinalizedReservationException {
         throwCouldNotRankNonFinalizedReservationExceptionIfNecessary();
         this.occupantScore = occupantScore;
     }
@@ -107,7 +106,7 @@ public class Reservation {
         return propertyScore;
     }
 
-    public void setPropertyScore(PropertyScore propertyScore) throws CouldNotRankNonFinalizedReservationException {
+    public void setPropertyScore(PropertyScore propertyScore) throws CanNotRankNonFinalizedReservationException {
         throwCouldNotRankNonFinalizedReservationExceptionIfNecessary();
         this.propertyScore = propertyScore;
     }
@@ -146,9 +145,9 @@ public class Reservation {
         return status.equals(finalizedStatus);
     }
 
-    private void throwCouldNotRankNonFinalizedReservationExceptionIfNecessary() throws CouldNotRankNonFinalizedReservationException {
+    private void throwCouldNotRankNonFinalizedReservationExceptionIfNecessary() throws CanNotRankNonFinalizedReservationException {
         if (!isFinalized()) {
-            throw new CouldNotRankNonFinalizedReservationException("Could not rank a non finalized reservation");
+            throw new CanNotRankNonFinalizedReservationException("Could not rank a non finalized reservation");
         }
     }
 }

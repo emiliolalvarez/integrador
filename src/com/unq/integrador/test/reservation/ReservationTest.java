@@ -112,7 +112,7 @@ public class ReservationTest {
         reservation.setOwnerScore(ownerScore);
         assertEquals(ownerScore, reservation.getOwnerScore());
     }
-    @Test(expected = CouldNotRankNonFinalizedReservationException.class)
+    @Test(expected = CanNotRankNonFinalizedReservationException.class)
     public void testSetOwnerScoreOnNonFinalizedReservation() throws Exception{
         reservation.setOwnerScore(ownerScore);
     }
@@ -125,7 +125,7 @@ public class ReservationTest {
         assertEquals(occupantScore, reservation.getOccupantScore());
     }
 
-    @Test(expected = CouldNotRankNonFinalizedReservationException.class)
+    @Test(expected = CanNotRankNonFinalizedReservationException.class)
     public void testSetOccupantScoreOnNonFinalizedReservation() throws Exception{
         reservation.setOwnerScore(ownerScore);
     }
@@ -138,7 +138,7 @@ public class ReservationTest {
         assertEquals(propertyScore, reservation.getPropertyScore());
     }
 
-    @Test(expected = CouldNotRankNonFinalizedReservationException.class)
+    @Test(expected = CanNotRankNonFinalizedReservationException.class)
     public void testSetPropertyScoreOnNonFinalizedReservation() throws Exception{
         reservation.setPropertyScore(propertyScore);
     }
