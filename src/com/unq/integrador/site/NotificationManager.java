@@ -48,13 +48,4 @@ public class NotificationManager {
         }
     }
 
-    public Map<Publication, Set<PriceLoweredObserver>> getPriceLoweredMapper() {
-        return priceLoweredMapper;
-    }
-
-    public Map<Publication, Set<ReservationCancelledObserver>> getReservationCancelledMapper() {
-        return reservationCancelledMapper;
-    }
-
-
 }
