@@ -3,7 +3,6 @@ package com.unq.integrador.publication;
 import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.score.GlobalScore;
 import com.unq.integrador.site.NotificationManager;
-import com.unq.integrador.site.PublicationObserver;
 import com.unq.integrador.user.User;
 
 import java.time.LocalDate;
@@ -130,7 +129,10 @@ public class Publication implements PublicationSubject {
         return globalScore;
     }
 
-    public void registerObserver(PublicationObserver observer) {
+    public void register(PriceLoweredObserver observer) {
+        notificationManager.register(this, observer);
+    }
+    public void register(ReservationCancelledObserver observer) {
         notificationManager.register(this, observer);
     }
 

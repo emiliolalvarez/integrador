@@ -1,9 +1,6 @@
 package com.unq.integrador.test.publication;
 
-import com.unq.integrador.publication.PaymentOption;
-import com.unq.integrador.publication.PricePeriod;
-import com.unq.integrador.publication.Property;
-import com.unq.integrador.publication.Publication;
+import com.unq.integrador.publication.*;
 import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.score.GlobalScore;
 import com.unq.integrador.score.reviewer.PropertyScore;
@@ -113,13 +110,17 @@ public class PublicationTest {
     }
 
     @Test
-    public void testPriceLoweredNotification() {
-	    PriceLoweredObserver priceLoweredObserver = mock(PriceLoweredObserver.class);
-        when(pricePeriod.getPrice()).thenReturn(100f);
-        publication.addPricePeriod(pricePeriod);
-        publication.registerObserver(priceLoweredObserver);
-        publication.modifyPrice(pricePeriod, 50f);
+    public void testPriceLoweredObserverRegistration() {
+        PriceLoweredObserver priceLoweredObserver = mock(PriceLoweredObserver.class);
+        publication.register(priceLoweredObserver);
         verify(notificationManager).register(publication, priceLoweredObserver);
+    }
+
+    @Test
+    public void testPriceLoweredNotification() {
+	    when(pricePeriod.getPrice()).thenReturn(100f);
+        publication.addPricePeriod(pricePeriod);
+        publication.modifyPrice(pricePeriod, 50f);
         verify(notificationManager).notifyPriceLowered(publication, 50f);
     }
 
@@ -179,11 +180,16 @@ public class PublicationTest {
     }
 
     @Test
+    public void testReservationCancelledObserverRegistration() {
+        ReservationCancelledObserver observer = mock(ReservationCancelledObserver.class);
+        publication.register(observer);
+        verify(notificationManager).register(publication, observer);
+    }
+
+    @Test
     public void testReservationCancelledNotification() {
 	    ReservationCancelledObserver observer = mock(ReservationCancelledObserver.class);
-        publication.registerObserver(observer);
         publication.notifyCancelledReservation();
-        verify(notificationManager).register(publication, observer);
         verify(notificationManager).notifyReservationCancelled(publication);
     }
 
