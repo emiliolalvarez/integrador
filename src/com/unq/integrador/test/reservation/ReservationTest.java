@@ -106,7 +106,7 @@ public class ReservationTest {
     }
 
     @Test
-    public void testSetOwnerScoreOnFinzalizedReservation() throws Exception{
+    public void testSetOwnerScoreOnFinalizedReservation() throws Exception{
         reservation.setStatus(reservation.getFinalizedStatus());
         assertEquals(null, reservation.getOwnerScore());
         reservation.setOwnerScore(ownerScore);
