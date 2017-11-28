@@ -3,97 +3,111 @@ package com.unq.integrador.test.publication;
 import com.unq.integrador.publication.*;
 import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.score.GlobalScore;
-import com.unq.integrador.score.reviewer.PropertyScore;
 import com.unq.integrador.score.category.PropertyScoreCategory;
 import com.unq.integrador.score.category.value.PropertyScoreValue;
 import com.unq.integrador.score.category.value.ScoreValue;
-import com.unq.integrador.site.*;
+import com.unq.integrador.score.reviewer.PropertyScore;
+import com.unq.integrador.site.NotificationManager;
+import com.unq.integrador.site.PropertyType;
 import com.unq.integrador.user.User;
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class PublicationTest {
 
-	private User user, occupant;
-	private PropertyType type;
-	private PricePeriod pricePeriod;
-	private Publication publication;
-	private LocalDate startDate, endDate;
-	private Reservation reservation;
-	private Property property;
-	private LocalTime checkIn;
-	private LocalTime checkOut;
+
+    private LocalDate startDate, endDate;
+    private Reservation reservation;
+    private LocalTime checkIn;
+    private LocalTime checkOut;
     private PropertyScoreCategory category1;
     private PropertyScoreCategory category2;
     private PropertyScoreCategory category3;
+    private PropertyType type;
+    private PricePeriod pricePeriod;
+    private Property property;
+    private User occupant;
+    private Reservation reservation1;
+    private Reservation reservation2;
+    private Reservation reservation3;
+    @Mock(name = "owner")
+    private User owner;
+    @Mock(name = "notificationManager")
     private NotificationManager notificationManager;
-	
-	@Before
-	public void setUp() throws Exception {
-		user = mock(User.class);
-		type = new PropertyType("apartment");
-		pricePeriod = mock(PricePeriod.class);
-		property = getPropertyMock(type);
-        notificationManager = mock(NotificationManager.class);
-        publication = new Publication(user, property);
-        publication.setNotificationManager(notificationManager);
+    @Mock(name = "reservations")
+    private List<Reservation> reservations;
+    @InjectMocks
+    private Publication publication;
 
-		occupant = mock(User.class);
-		startDate = LocalDate.now();
-		checkIn = LocalTime.parse("11 00 AM", DateTimeFormatter.ofPattern("hh mm a", Locale.US));
-		checkOut = LocalTime.parse("09 00 AM", DateTimeFormatter.ofPattern("hh mm a", Locale.US));
+    @Before
+    public void setUp() throws Exception {
+        pricePeriod = mock(PricePeriod.class);
+        property = getPropertyMock(type);
+        startDate = LocalDate.now();
+        checkIn = LocalTime.parse("11 00 AM", DateTimeFormatter.ofPattern("hh mm a", Locale.US));
+        checkOut = LocalTime.parse("09 00 AM", DateTimeFormatter.ofPattern("hh mm a", Locale.US));
 
         endDate = startDate.plusDays(30);
         reservation = mock(Reservation.class);
+        reservation1 = mock(Reservation.class);
+        reservation2 = mock(Reservation.class);
+        reservation3 = mock(Reservation.class);
+        occupant = mock(User.class);
 
         category1 = getPropertyScoreCategoryMock("Category1");
         category2 = getPropertyScoreCategoryMock("Category2");
         category3 = getPropertyScoreCategoryMock("Category3");
-	}
+        type = new PropertyType("apartment");
+        MockitoAnnotations.initMocks(this);
+
+    }
 
 
-	@Test
+    @Test
     public void testGetOwner() {
-	    assertEquals(user, publication.getOwner());
+        assertEquals(owner, publication.getOwner());
     }
 
     @Test
     public void getProperty() {
-	    assertEquals(property, publication.getProperty());
+        assertEquals(property, publication.getProperty());
     }
 
     @Test
     public void testCheckInTime() {
-	    assertEquals(null, publication.getCheckIn());
-	    publication.setCheckIn(checkIn);
-	    assertEquals(checkIn, publication.getCheckIn());
+        assertEquals(null, publication.getCheckIn());
+        publication.setCheckIn(checkIn);
+        assertEquals(checkIn, publication.getCheckIn());
     }
 
     @Test
     public void testCheckOutTime() {
-	    assertEquals(null, publication.getCheckOut());
-	    publication.setCheckOut(checkOut);
-	    assertEquals(checkOut, publication.getCheckOut());
+        assertEquals(null, publication.getCheckOut());
+        publication.setCheckOut(checkOut);
+        assertEquals(checkOut, publication.getCheckOut());
     }
 
     @Test
     public void getPriceForExistingPeriodDay() {
-	    LocalDate date = LocalDate.parse("2017-01-15");
-	    LocalDate[] dates = {date};
-	    PricePeriod pricePeriod = getPricePeriodMock(dates, true, 550f);
+        LocalDate date = LocalDate.parse("2017-01-15");
+        LocalDate[] dates = {date};
+        PricePeriod pricePeriod = getPricePeriodMock(dates, true, 550f);
         publication.addPricePeriod(pricePeriod);
         Float price = publication.getDayPrice(date);
         assertEquals(new Float(550), price);
@@ -103,7 +117,7 @@ public class PublicationTest {
     public void getPriceForNonExistingPeriodDay() {
         LocalDate date = LocalDate.parse("2017-01-15");
         LocalDate[] dates = {date};
-        PricePeriod pricePeriod = getPricePeriodMock(dates,false, 550f);
+        PricePeriod pricePeriod = getPricePeriodMock(dates, false, 550f);
         publication.addPricePeriod(pricePeriod);
         Float price = publication.getDayPrice(LocalDate.parse("2017-03-15"));
         assertEquals(new Float(0), price);
@@ -118,7 +132,7 @@ public class PublicationTest {
 
     @Test
     public void testPriceLoweredNotification() {
-	    when(pricePeriod.getPrice()).thenReturn(100f);
+        when(pricePeriod.getPrice()).thenReturn(100f);
         publication.addPricePeriod(pricePeriod);
         publication.modifyPrice(pricePeriod, 50f);
         verify(notificationManager).notifyPriceLowered(publication, 50f);
@@ -126,7 +140,7 @@ public class PublicationTest {
 
     @Test
     public void getPriceForDateRange() {
-	    LocalDate[] period1Dates = {LocalDate.parse("2017-01-19"), LocalDate.parse("2017-01-20")};
+        LocalDate[] period1Dates = {LocalDate.parse("2017-01-19"), LocalDate.parse("2017-01-20")};
         LocalDate[] period2Dates = {LocalDate.parse("2017-01-21"), LocalDate.parse("2017-01-22")};
         LocalDate[] period3Dates = {LocalDate.parse("2017-01-23")};
         PricePeriod period1 = getPricePeriodMock(period1Dates, true, 550f);
@@ -138,15 +152,15 @@ public class PublicationTest {
         publication.addPricePeriod(period1);
         publication.addPricePeriod(period2);
         publication.addPricePeriod(period3);
-        assertEquals(new Float(550f+550f+400f+400f+300f), publication.getPrice(start, end));
+        assertEquals(new Float(550f + 550f + 400f + 400f + 300f), publication.getPrice(start, end));
     }
 
     @Test
     public void addPricePeriod() {
-	    assertEquals(0, publication.getPricePeriods().size());
-	    publication.addPricePeriod(pricePeriod);
-	    assertEquals(1, publication.getPricePeriods().size());
-	    assertTrue(publication.getPricePeriods().contains(pricePeriod));
+        assertEquals(0, publication.getPricePeriods().size());
+        publication.addPricePeriod(pricePeriod);
+        assertEquals(1, publication.getPricePeriods().size());
+        assertTrue(publication.getPricePeriods().contains(pricePeriod));
     }
 
     @Test
@@ -157,9 +171,10 @@ public class PublicationTest {
         assertFalse(publication.getPricePeriods().contains(pricePeriod));
     }
 
+
     @Test
     public void testAddPaymentOption() {
-	    assertEquals(0, publication.getPaymentOptions().size());
+        assertEquals(0, publication.getPaymentOptions().size());
         PaymentOption opt1 = mock(PaymentOption.class);
         publication.addPaymentOption(opt1);
         assertEquals(1, publication.getPaymentOptions().size());
@@ -188,26 +203,23 @@ public class PublicationTest {
 
     @Test
     public void testReservationCancelledNotification() {
-	    ReservationCancelledObserver observer = mock(ReservationCancelledObserver.class);
         publication.notifyCancelledReservation();
         verify(notificationManager).notifyReservationCancelled(publication);
     }
 
     @Test
     public void testAddReservation() {
-        assertFalse(publication.getReservations().contains(reservation));
         when(reservation.getOccupant()).thenReturn(occupant);
         publication.addReservation(reservation);
-	    assertTrue(publication.getReservations().contains(reservation));
-	    verify(occupant, only()).addReservation(reservation);
+        verify(occupant).addReservation(reservation);
+        verify(reservations).add(reservation);
     }
 
     @Test
     public void testGetPropertyScore() {
         Reservation reservation1 = getReservationWithPropertyScoreMock(new PropertyScoreValue[]{getPropertyScoreValue(category1, 3), getPropertyScoreValue(category2, 4), getPropertyScoreValue(category3, 5)});
         Reservation reservation2 = getReservationWithPropertyScoreMock(new PropertyScoreValue[]{getPropertyScoreValue(category1, 3), getPropertyScoreValue(category2, 2), getPropertyScoreValue(category3, 3)});
-        publication.addReservation(reservation1);
-        publication.addReservation(reservation2);
+        prepareReservations(new Reservation[]{reservation1, reservation2});
         GlobalScore globalScore = publication.getPropertyScore();
         Set<ScoreValue> scoreValues = globalScore.getScoreValues();
         assertEquals(3, scoreValues.size());
@@ -222,6 +234,7 @@ public class PublicationTest {
     @Test
     public void testIsAvailableWhenHasNoReservations() {
         assertEquals(0, publication.getReservations().size());
+        prepareReservationsWithEmptyIterator();
         assertTrue(publication.isAvailable(startDate, endDate));
     }
 
@@ -248,9 +261,9 @@ public class PublicationTest {
 
     @Test
     public void isNotAvailableIfStartDateEqualsReservationRangeStartDate() {
-	    prepareReservationDateRange(startDate, startDate.plusDays(5));
-	    addAcceptedReservationToPublication();
-	    assertFalse(publication.isAvailable(startDate, endDate));
+        prepareReservationDateRange(startDate, startDate.plusDays(5));
+        addAcceptedReservationToPublication();
+        assertFalse(publication.isAvailable(startDate, endDate));
     }
 
     @Test
@@ -258,6 +271,42 @@ public class PublicationTest {
         prepareReservationDateRange(startDate.plusDays(1), startDate.minusDays(1));
         addAcceptedReservationToPublication();
         assertFalse(publication.isAvailable(startDate, endDate));
+    }
+
+    @Test
+    public void getFinalizedReservations() {
+        prepareFinalizedReservations();
+        List<Reservation> reservations = publication.getFinalizedReservations();
+        assertTrue(reservations.contains(reservation1));
+        assertFalse(reservations.contains(reservation2));
+        assertTrue(reservations.contains(reservation3));
+    }
+
+    private void prepareReservations(Reservation[] reservations) {
+        when(this.reservations.stream()).thenReturn(Arrays.asList(reservations).stream());
+    }
+
+    private void prepareFinalizedReservations() {
+        when(reservation1.isFinalized()).thenReturn(true);
+        when(reservation2.isFinalized()).thenReturn(false);
+        when(reservation3.isFinalized()).thenReturn(true);
+        Iterator<Reservation> iterator = getReservationsIterator();
+        when(reservations.iterator()).thenReturn(iterator);
+        when(this.reservations.stream()).thenReturn(Arrays.asList(new Reservation[]{reservation1, reservation2, reservation3}).stream());
+    }
+
+    private void prepareReservationsWithEmptyIterator() {
+        Iterator<Reservation> iterator = mock(Iterator.class);
+        when(iterator.hasNext()).thenReturn(false);
+        when(reservations.iterator()).thenReturn(iterator);
+        when(reservations.stream()).thenReturn(Arrays.asList(new Reservation[]{}).stream());
+    }
+
+    private Iterator<Reservation> getReservationsIterator() {
+        Iterator<Reservation> iterator = mock(Iterator.class);
+        when(iterator.hasNext()).thenReturn(true, true, true, false);
+        when(iterator.next()).thenReturn(reservation1).thenReturn(reservation2).thenReturn(reservation3);
+        return iterator;
     }
 
     private void prepareReservationDateRange(LocalDate startDate, LocalDate endDate) {
@@ -268,8 +317,7 @@ public class PublicationTest {
     private void addAcceptedReservationToPublication() {
         when(reservation.getOccupant()).thenReturn(occupant);
         when(reservation.isAccepted()).thenReturn(true);
-        publication.addReservation(reservation);
-
+        when(reservations.stream()).thenReturn(Arrays.asList(new Reservation[]{reservation}).stream());
     }
 
     private Property getPropertyMock(PropertyType type) {
@@ -281,7 +329,7 @@ public class PublicationTest {
     private PricePeriod getPricePeriodMock(LocalDate[] dates, Boolean isInPeriod, Float price) {
         PricePeriod pricePeriod = mock(PricePeriod.class);
         when(pricePeriod.isInPeriod(any())).thenReturn(false);
-        for (LocalDate date: dates) {
+        for (LocalDate date : dates) {
             when(pricePeriod.isInPeriod(date)).thenReturn(isInPeriod);
         }
         when(pricePeriod.getPrice()).thenReturn(price);
@@ -289,24 +337,21 @@ public class PublicationTest {
     }
 
     private Reservation getReservationWithPropertyScoreMock(PropertyScoreValue[] scoreValues) {
-	    Reservation reservation = mock(Reservation.class);
-	    PropertyScore score = mock(PropertyScore.class);
-	    Mockito.doReturn(Arrays.asList(scoreValues).stream().collect(Collectors.toSet())).when(score).getScoreValues();
-	    when(reservation.getPropertyScore()).thenReturn(score);
-	    when(reservation.getOccupant()).thenReturn(occupant);
-	    return reservation;
+        Reservation reservation = mock(Reservation.class);
+        PropertyScore score = mock(PropertyScore.class);
+        Mockito.doReturn(Arrays.asList(scoreValues).stream().collect(Collectors.toSet())).when(score).getScoreValues();
+        when(reservation.getPropertyScore()).thenReturn(score);
+        when(reservation.getOccupant()).thenReturn(occupant);
+        return reservation;
     }
 
     private PropertyScoreCategory getPropertyScoreCategoryMock(String name) {
-	    PropertyScoreCategory category = mock(PropertyScoreCategory.class);
-	    when(category.getName()).thenReturn(name);
-	    return category;
+        PropertyScoreCategory category = mock(PropertyScoreCategory.class);
+        when(category.getName()).thenReturn(name);
+        return category;
     }
 
     private PropertyScoreValue getPropertyScoreValue(PropertyScoreCategory category, Integer value) {
-	    return new PropertyScoreValue(category, value);
+        return new PropertyScoreValue(category, value);
     }
-
-
-
 }

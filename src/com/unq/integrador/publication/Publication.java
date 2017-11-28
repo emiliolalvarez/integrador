@@ -8,6 +8,7 @@ import com.unq.integrador.user.User;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Publication implements PublicationSubject {
 
@@ -22,7 +23,7 @@ public class Publication implements PublicationSubject {
 
     public Publication(User owner, Property property) {
         this.owner = owner;
-        reservations = new ArrayList<>();
+        //reservations = new ArrayList<>();
         pricePeriods = new HashSet<>();
         paymentOptions = new HashSet<>();
         notificationManager = new NotificationManager();
@@ -114,12 +115,13 @@ public class Publication implements PublicationSubject {
     }
 
     public void notifyCancelledReservation() {
-        this.notificationManager.notifyReservationCancelled(this);
+        notificationManager.notifyReservationCancelled(this);
     }
 
     public GlobalScore getPropertyScore() {
         GlobalScore globalScore = new GlobalScore();
-        Long totalScores = reservations.stream().filter(reservation -> reservation.getPropertyScore() != null).count();
+        List<Reservation> reservations = this.reservations.stream().filter(reservation -> reservation.getPropertyScore() != null).collect(Collectors.toList());
+        Integer totalScores = reservations.size();
         reservations.stream().filter(reservation -> reservation.getPropertyScore() != null).forEach(reservation -> {
             reservation.getPropertyScore().getScoreValues().forEach(scoreValue -> {
                 globalScore.addScoreValue(scoreValue);
@@ -136,10 +138,6 @@ public class Publication implements PublicationSubject {
         notificationManager.register(this, observer);
     }
 
-    public void setNotificationManager(NotificationManager notificationManager) {
-        this.notificationManager = notificationManager;
-    }
-
     public Boolean isAvailable(LocalDate startDate, LocalDate endDate) {
         return !reservations.stream().filter(reservation -> reservation.isAccepted()).anyMatch(reservation ->
             reservation.getStartDate().equals(startDate) || reservation.getEndDate().equals(endDate)
@@ -148,5 +146,9 @@ public class Publication implements PublicationSubject {
             || (reservation.getStartDate().isBefore(startDate) && reservation.getEndDate().isAfter(startDate))
             || (reservation.getStartDate().isBefore(endDate) && reservation.getEndDate().isAfter(endDate))
         );
+    }
+
+    public List<Reservation> getFinalizedReservations() {
+        return reservations.stream().filter(reservation -> reservation.isFinalized()).collect(Collectors.toList());
     }
 }
