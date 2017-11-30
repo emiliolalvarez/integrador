@@ -4,6 +4,7 @@ import com.unq.integrador.publication.Publication;
 import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.score.GlobalScore;
 import com.unq.integrador.score.category.value.ScoreValue;
+import org.mockito.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class User {
     private List<Reservation> reservations;
     private GlobalScore ownerScore;
     private GlobalScore occupantScore;
+    private LocalDate registrationDate;
 
     public User(String name, String lastName, String email, String phone) {
         this.name = name;
@@ -32,6 +34,7 @@ public class User {
         reservations = new ArrayList<>();
         ownerScore = new GlobalScore();
         occupantScore = new GlobalScore();
+        registrationDate = LocalDate.now();
     }
 
     public String getEmail() {
@@ -134,4 +137,7 @@ public class User {
         return globalScore;
     }
 
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
 }

@@ -20,6 +20,7 @@ import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +36,8 @@ public class UserTest {
     private Set<Publication> publications;
     @Mock(name = "reservations")
     private List<Reservation> reservations;
+    @Mock(name = "registrationDate")
+    private ChronoLocalDate registrationDate;
     @Spy
     private GlobalScore ownerScore = new GlobalScore();
     @Spy
@@ -206,6 +209,11 @@ public class UserTest {
         assertEquals(reservations.size(), 2);
         assertEquals(reservations.get(0).getPublication().getProperty().getCity(), city1);
         assertEquals(reservations.get(1).getPublication().getProperty().getCity(), city1);
+    }
+
+
+    public void testGetRegistrationDate() {
+        assertEquals(registrationDate, user.getRegistrationDate());
     }
 
     private Publication getPublicationMock(Reservation[] reservations) {
