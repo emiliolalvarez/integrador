@@ -10,6 +10,9 @@ public class GlobalScore extends Score {
        add(scoreValue);
     }
 
+    public void clear() {
+        scores.removeAll(scores);
+    }
 
 
 }
