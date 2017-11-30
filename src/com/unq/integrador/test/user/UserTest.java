@@ -6,10 +6,8 @@ import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.score.GlobalScore;
 import com.unq.integrador.score.category.OccupantScoreCategory;
 import com.unq.integrador.score.category.OwnerScoreCategory;
-import com.unq.integrador.score.category.ScoreCategory;
 import com.unq.integrador.score.category.value.OccupantScoreValue;
 import com.unq.integrador.score.category.value.OwnerScoreValue;
-import com.unq.integrador.score.category.value.ScoreValue;
 import com.unq.integrador.score.reviewer.OccupantScore;
 import com.unq.integrador.score.reviewer.OwnerScore;
 import com.unq.integrador.user.User;
@@ -20,7 +18,6 @@ import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -214,15 +211,25 @@ public class UserTest {
     }
 
     @Test
-    public void testGetPropertyReservationCount() {
+    public void testGetConcretedReservationsByPropertyCount() {
         preparePublicationsWithProperties();
-        assertEquals(new Long(2), user.getPropertyReservationsCount(property1));
+        assertEquals(new Long(2), user.getConcretedReservationsAsOwnerCount(property1));
     }
 
     @Test
-    public void testGetReservationsCount() {
+    public void testGetConcretedReservationsCount() {
         preparePublicationsWithProperties();
-        assertEquals(new Long(3), user.getReservationsCount());
+        assertEquals(new Long(3), user.getConcretedReservationsAsOwnerCount());
+    }
+
+    @Test
+    public void testGetConcretedReservationsProperties() {
+        preparePublicationsWithProperties();
+        Set<Property> properties = user.getConcretedReservationsPropertiesAsOwner();
+        assertTrue(properties.contains(property1));
+        assertFalse(properties.contains(property2));
+        assertTrue(properties.contains(property3));
+
     }
 
     private Publication getPublicationMock(Reservation[] reservations) {
@@ -276,6 +283,9 @@ public class UserTest {
         when(publication1.getFinalizedReservations()).thenReturn(Arrays.asList(new Reservation[]{reservation1}));
         when(publication2.getFinalizedReservations()).thenReturn(Arrays.asList(new Reservation[]{reservation2}));
         when(publication3.getFinalizedReservations()).thenReturn(Arrays.asList(new Reservation[]{reservation3}));
+        when(reservation1.getPublication()).thenReturn(publication1);
+        when(reservation2.getPublication()).thenReturn(publication2);
+        when(reservation3.getPublication()).thenReturn(publication3);
         when(publications.stream()).thenReturn(Arrays.asList(new Publication[]{publication1, publication2, publication3}).stream());
     }
 

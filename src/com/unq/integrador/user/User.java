@@ -5,7 +5,6 @@ import com.unq.integrador.publication.Publication;
 import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.score.GlobalScore;
 import com.unq.integrador.score.category.value.ScoreValue;
-import org.mockito.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -91,7 +90,7 @@ public class User {
 
     public GlobalScore getScoreAsOwner() {
         ownerScore.clear();
-        Set<Reservation> reservations = getOwnerFinalizedReservations();
+        Set<Reservation> reservations = getFinalizedReservationsAsOwner();
         reservations.forEach(reservation -> {
         reservation.getOwnerScore().getScoreValues().forEach(scoreValue -> {
             addToPartialScores(ownerScore, scoreValue);
@@ -114,7 +113,7 @@ public class User {
         return occupantScore;
     }
 
-    private Set<Reservation> getOwnerFinalizedReservations() {
+    private Set<Reservation> getFinalizedReservationsAsOwner() {
         Set<Reservation> reservations = new HashSet<>();
         publications.stream().forEach(publication -> {
             publication.getFinalizedReservations().forEach(reservation -> reservations.add(reservation));
@@ -142,12 +141,17 @@ public class User {
         return registrationDate;
     }
 
-    public Long getPropertyReservationsCount(Property property) {
+    public Long getConcretedReservationsAsOwnerCount(Property property) {
         return publications.stream().filter(publication -> publication.getProperty().equals(property))
                 .mapToLong(publication -> publication.getFinalizedReservations().stream().count()).sum();
     }
 
-    public Long getReservationsCount() {
+    public Long getConcretedReservationsAsOwnerCount() {
         return publications.stream().mapToLong(publication -> publication.getFinalizedReservations().stream().count()).sum();
+    }
+
+    public Set<Property> getConcretedReservationsPropertiesAsOwner() {
+        return getFinalizedReservationsAsOwner().stream().map(reservation -> reservation.getPublication()
+                .getProperty()).collect(Collectors.toSet());
     }
 }
