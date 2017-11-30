@@ -6,6 +6,7 @@ import com.unq.integrador.score.GlobalScore;
 import com.unq.integrador.score.category.PropertyScoreCategory;
 import com.unq.integrador.score.category.value.PropertyScoreValue;
 import com.unq.integrador.score.category.value.ScoreValue;
+import com.unq.integrador.score.reviewer.Comment;
 import com.unq.integrador.score.reviewer.PropertyScore;
 import com.unq.integrador.site.NotificationManager;
 import com.unq.integrador.site.PropertyType;
@@ -31,7 +32,6 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class PublicationTest {
 
-
     private LocalDate startDate, endDate;
     private Reservation reservation;
     private LocalTime checkIn;
@@ -46,6 +46,8 @@ public class PublicationTest {
     private Reservation reservation1;
     private Reservation reservation2;
     private Reservation reservation3;
+    private PropertyScore reservation1PropertyScore, reservation2PropertyScore, reservation3PropertyScore;
+    private Comment reservation1PropertyComment, reservation2PropertyComment, reservation3PropertyComment;
     @Mock(name = "owner")
     private User owner;
     @Mock(name = "notificationManager")
@@ -68,6 +70,12 @@ public class PublicationTest {
         reservation1 = mock(Reservation.class);
         reservation2 = mock(Reservation.class);
         reservation3 = mock(Reservation.class);
+        reservation1PropertyScore = mock(PropertyScore.class);
+        reservation2PropertyScore = mock(PropertyScore.class);
+        reservation3PropertyScore = mock(PropertyScore.class);
+        reservation1PropertyComment = mock(Comment.class);
+        reservation2PropertyComment = mock(Comment.class);
+        reservation3PropertyComment = mock(Comment.class);
         occupant = mock(User.class);
 
         category1 = getPropertyScoreCategoryMock("Category1");
@@ -282,6 +290,16 @@ public class PublicationTest {
         assertTrue(reservations.contains(reservation3));
     }
 
+    @Test
+    public void testGetPropertyComments() {
+        prepareFinalizedReservations();
+        List<Comment> comments = publication.getPropertyComments();
+        assertEquals(2, comments.size());
+        assertTrue(comments.contains(reservation1PropertyComment));
+        assertFalse(comments.contains(reservation2PropertyComment));
+        assertTrue(comments.contains(reservation3PropertyComment));
+    }
+
     private void prepareReservations(Reservation[] reservations) {
         when(this.reservations.stream()).thenReturn(Arrays.asList(reservations).stream());
     }
@@ -290,6 +308,11 @@ public class PublicationTest {
         when(reservation1.isFinalized()).thenReturn(true);
         when(reservation2.isFinalized()).thenReturn(false);
         when(reservation3.isFinalized()).thenReturn(true);
+        when(reservation1.getPropertyScore()).thenReturn(reservation1PropertyScore);
+        when(reservation3.getPropertyScore()).thenReturn(reservation3PropertyScore);
+        when(reservation1PropertyScore.getComment()).thenReturn(reservation1PropertyComment);
+        when(reservation3PropertyScore.getComment()).thenReturn(reservation3PropertyComment);
+
         Iterator<Reservation> iterator = getReservationsIterator();
         when(reservations.iterator()).thenReturn(iterator);
         when(this.reservations.stream()).thenReturn(Arrays.asList(new Reservation[]{reservation1, reservation2, reservation3}).stream());

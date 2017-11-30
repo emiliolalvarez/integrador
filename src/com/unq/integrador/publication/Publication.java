@@ -2,6 +2,7 @@ package com.unq.integrador.publication;
 
 import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.score.GlobalScore;
+import com.unq.integrador.score.reviewer.Comment;
 import com.unq.integrador.site.NotificationManager;
 import com.unq.integrador.user.User;
 
@@ -150,5 +151,10 @@ public class Publication implements PublicationSubject {
 
     public List<Reservation> getFinalizedReservations() {
         return reservations.stream().filter(reservation -> reservation.isFinalized()).collect(Collectors.toList());
+    }
+
+    public List<Comment> getPropertyComments() {
+        return getFinalizedReservations().stream().map(reservation -> reservation.getPropertyScore().getComment())
+                .collect(Collectors.toList());
     }
 }
