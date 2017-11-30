@@ -143,6 +143,11 @@ public class User {
     }
 
     public Long getPropertyReservationsCount(Property property) {
-        return publications.stream().filter(publication -> publication.getProperty().equals(property)).count();
+        return publications.stream().filter(publication -> publication.getProperty().equals(property))
+                .mapToLong(publication -> publication.getFinalizedReservations().stream().count()).sum();
+    }
+
+    public Long getReservationsCount() {
+        return publications.stream().mapToLong(publication -> publication.getFinalizedReservations().stream().count()).sum();
     }
 }
