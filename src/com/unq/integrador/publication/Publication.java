@@ -23,7 +23,7 @@ public class Publication implements PublicationSubject {
 
     public Publication(User owner, Property property) {
         this.owner = owner;
-        //reservations = new ArrayList<>();
+        reservations = new ArrayList<>();
         pricePeriods = new HashSet<>();
         paymentOptions = new HashSet<>();
         notificationManager = new NotificationManager();
