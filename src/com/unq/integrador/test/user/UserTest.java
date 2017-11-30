@@ -25,9 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,8 +35,6 @@ public class UserTest {
     private Set<Publication> publications;
     @Mock(name = "reservations")
     private List<Reservation> reservations;
-    @Mock(name = "registrationDate")
-    private ChronoLocalDate registrationDate;
     @Spy
     private GlobalScore ownerScore = new GlobalScore();
     @Spy
@@ -211,9 +208,9 @@ public class UserTest {
         assertEquals(reservations.get(1).getPublication().getProperty().getCity(), city1);
     }
 
-
+    @Test
     public void testGetRegistrationDate() {
-        assertEquals(registrationDate, user.getRegistrationDate());
+        assertThat(user.getRegistrationDate(), instanceOf(LocalDate.class));
     }
 
     private Publication getPublicationMock(Reservation[] reservations) {
