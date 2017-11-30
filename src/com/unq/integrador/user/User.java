@@ -1,5 +1,6 @@
 package com.unq.integrador.user;
 
+import com.unq.integrador.publication.Property;
 import com.unq.integrador.publication.Publication;
 import com.unq.integrador.reservation.Reservation;
 import com.unq.integrador.score.GlobalScore;
@@ -139,5 +140,9 @@ public class User {
 
     public LocalDate getRegistrationDate() {
         return registrationDate;
+    }
+
+    public Long getPropertyReservationsCount(Property property) {
+        return publications.stream().filter(publication -> publication.getProperty().equals(property)).count();
     }
 }

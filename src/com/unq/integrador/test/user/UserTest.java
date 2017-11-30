@@ -213,6 +213,12 @@ public class UserTest {
         assertThat(user.getRegistrationDate(), instanceOf(LocalDate.class));
     }
 
+    @Test
+    public void testGetPropertyReservationCount() {
+        preparePublicationsWithProperties();
+        assertEquals(new Long(2), user.getPropertyReservationsCount(property1));
+    }
+
     private Publication getPublicationMock(Reservation[] reservations) {
         Publication publication = mock(Publication.class);
         when(publication.getFinalizedReservations()).thenReturn(Arrays.asList(reservations));
@@ -255,6 +261,13 @@ public class UserTest {
         when(property2.getCity()).thenReturn(city2);
         when(property3.getCity()).thenReturn(city1);
         when(reservations.stream()).thenReturn(Arrays.asList(new Reservation[]{reservation1, reservation2, reservation3}).stream());
+    }
+
+    private void preparePublicationsWithProperties() {
+        when(publication1.getProperty()).thenReturn(property1);
+        when(publication2.getProperty()).thenReturn(property1);
+        when(publication3.getProperty()).thenReturn(property3);
+        when(publications.stream()).thenReturn(Arrays.asList(new Publication[]{publication1, publication2, publication3}).stream());
     }
 
 
