@@ -213,19 +213,19 @@ public class UserTest {
     @Test
     public void testGetConcretedReservationsByPropertyCount() {
         preparePublicationsWithProperties();
-        assertEquals(new Long(2), user.getConcretedReservationsAsOwnerCount(property1));
+        assertEquals(new Long(2), user.getPublicationFinishedReservationsCount(property1));
     }
 
     @Test
     public void testGetConcretedReservationsCount() {
         preparePublicationsWithProperties();
-        assertEquals(new Long(3), user.getConcretedReservationsAsOwnerCount());
+        assertEquals(new Long(3), user.getPublicationFinishedReservationsCount());
     }
 
     @Test
     public void testGetConcretedReservationsProperties() {
         preparePublicationsWithProperties();
-        Set<Property> properties = user.getConcretedReservationsPropertiesAsOwner();
+        Set<Property> properties = user.getPublicationFinishedReservationsProperties();
         assertTrue(properties.contains(property1));
         assertFalse(properties.contains(property2));
         assertTrue(properties.contains(property3));

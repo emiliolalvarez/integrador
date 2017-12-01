@@ -141,16 +141,16 @@ public class User {
         return registrationDate;
     }
 
-    public Long getConcretedReservationsAsOwnerCount(Property property) {
+    public Long getPublicationFinishedReservationsCount(Property property) {
         return publications.stream().filter(publication -> publication.getProperty().equals(property))
                 .mapToLong(publication -> publication.getFinalizedReservations().stream().count()).sum();
     }
 
-    public Long getConcretedReservationsAsOwnerCount() {
+    public Long getPublicationFinishedReservationsCount() {
         return publications.stream().mapToLong(publication -> publication.getFinalizedReservations().stream().count()).sum();
     }
 
-    public Set<Property> getConcretedReservationsPropertiesAsOwner() {
+    public Set<Property> getPublicationFinishedReservationsProperties() {
         return getFinalizedReservationsAsOwner().stream().map(reservation -> reservation.getPublication()
                 .getProperty()).collect(Collectors.toSet());
     }
