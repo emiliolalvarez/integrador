@@ -10,7 +10,7 @@ public class ReservationAcceptedBody extends ReservationBody {
     }
 
     @Override
-    public String getMessage() {
+    public String getBody() {
         return reservation.getOccupant().getName()
                 + " " + reservation.getOccupant().getLastName() + " has requested a reservation for "
                 + reservation.getPublication().getProperty().getType().getName() + " - " + reservation.getPublication().getProperty().getCity()

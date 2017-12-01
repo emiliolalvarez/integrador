@@ -9,7 +9,7 @@ public class ReservationRejectedBody extends ReservationBody {
     }
 
     @Override
-    public String getMessage() {
+    public String getBody() {
         return reservation.getPublication().getOwner().getName()
                 + " " + reservation.getPublication().getOwner().getLastName() + " has rejected your reservation for "
                 + reservation.getPublication().getProperty().getType().getName() + " - "

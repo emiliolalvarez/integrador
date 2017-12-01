@@ -51,7 +51,7 @@ public class PendingStatusTest {
         verify(owner).getEmail();
         verify(emailSender).getBodyFactory();
         verify(emailBodyFactory).getReservationAcceptedBody(reservation);
-        verify(acceptedBody).getMessage();
+        verify(acceptedBody).getBody();
         verify(emailSender).sendMail(email, "Reservation request accepted", acceptedBodyMessage);
     }
 
@@ -62,7 +62,7 @@ public class PendingStatusTest {
         verify(occupant).getEmail();
         verify(emailSender).getBodyFactory();
         verify(emailBodyFactory).getReservationRejectedBody(reservation);
-        verify(rejectedBody).getMessage();
+        verify(rejectedBody).getBody();
         verify(emailSender).sendMail(email, "Reservation request rejected", rejectedBodyMessage);
     }
 
@@ -110,8 +110,8 @@ public class PendingStatusTest {
     private void prepareBodyFactoryMock() {
         acceptedBody = mock(ReservationAcceptedBody.class);
         rejectedBody = mock(ReservationRejectedBody.class);
-        when(acceptedBody.getMessage()).thenReturn(acceptedBodyMessage);
-        when(rejectedBody.getMessage()).thenReturn(rejectedBodyMessage);
+        when(acceptedBody.getBody()).thenReturn(acceptedBodyMessage);
+        when(rejectedBody.getBody()).thenReturn(rejectedBodyMessage);
         emailBodyFactory = mock(EmailBodyFactory.class);
         when(emailBodyFactory.getReservationAcceptedBody(reservation)).thenReturn(acceptedBody);
         when(emailBodyFactory.getReservationRejectedBody(reservation)).thenReturn(rejectedBody);

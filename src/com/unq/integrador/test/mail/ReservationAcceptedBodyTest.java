@@ -41,7 +41,7 @@ public class ReservationAcceptedBodyTest {
 
     @Test
     public void testGetMessage() {
-        String message = body.getMessage();
+        String message = body.getBody();
         verify(reservation, Mockito.times(2)).getOccupant();
         verify(occupant).getName();
         verify(occupant).getLastName();
