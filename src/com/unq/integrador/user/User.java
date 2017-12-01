@@ -90,7 +90,7 @@ public class User {
 
     public GlobalScore getScoreAsOwner() {
         ownerScore.clear();
-        Set<Reservation> reservations = getFinalizedReservationsAsOwner();
+        Set<Reservation> reservations = getPublicationFinalizedReservations();
         reservations.forEach(reservation -> {
         reservation.getOwnerScore().getScoreValues().forEach(scoreValue -> {
             addToPartialScores(ownerScore, scoreValue);
@@ -113,30 +113,6 @@ public class User {
         return occupantScore;
     }
 
-    private Set<Reservation> getFinalizedReservationsAsOwner() {
-        Set<Reservation> reservations = new HashSet<>();
-        publications.stream().forEach(publication -> {
-            publication.getFinalizedReservations().forEach(reservation -> reservations.add(reservation));
-        });
-        return reservations;
-    }
-
-
-    private void addToPartialScores(GlobalScore globalScore, ScoreValue scoreValue) {
-        if (globalScore.hasScoreValue(scoreValue.getCategory())) {
-            globalScore.getByScoreCategory(scoreValue.getCategory()).sum(scoreValue);
-        } else {
-            globalScore.addScoreValue(scoreValue);
-        }
-    }
-
-    private GlobalScore calculateScoreAveragePerCategory(GlobalScore globalScore, Integer total) {
-        globalScore.getScoreValues().forEach(scoreValue -> {
-            scoreValue.updateValue(Math.round(scoreValue.getValue() / total) );
-        });
-        return globalScore;
-    }
-
     public LocalDate getRegistrationDate() {
         return registrationDate;
     }
@@ -151,7 +127,30 @@ public class User {
     }
 
     public Set<Property> getPublicationFinishedReservationsProperties() {
-        return getFinalizedReservationsAsOwner().stream().map(reservation -> reservation.getPublication()
+        return getPublicationFinalizedReservations().stream().map(reservation -> reservation.getPublication()
                 .getProperty()).collect(Collectors.toSet());
+    }
+
+    private Set<Reservation> getPublicationFinalizedReservations() {
+        Set<Reservation> reservations = new HashSet<>();
+        publications.stream().forEach(publication -> {
+            publication.getFinalizedReservations().forEach(reservation -> reservations.add(reservation));
+        });
+        return reservations;
+    }
+
+    private void addToPartialScores(GlobalScore globalScore, ScoreValue scoreValue) {
+        if (globalScore.hasScoreValue(scoreValue.getCategory())) {
+            globalScore.getByScoreCategory(scoreValue.getCategory()).sum(scoreValue);
+        } else {
+            globalScore.addScoreValue(scoreValue);
+        }
+    }
+
+    private GlobalScore calculateScoreAveragePerCategory(GlobalScore globalScore, Integer total) {
+        globalScore.getScoreValues().forEach(scoreValue -> {
+            scoreValue.updateValue(Math.round(scoreValue.getValue() / total) );
+        });
+        return globalScore;
     }
 }
